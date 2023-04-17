@@ -11,7 +11,7 @@ function TitlePage() {
   return (
     <div className="container">
       <div>
-      <img src={StarfallAdAstra} alt="Starfall Ad Astra"  style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
+      <img src={StarfallAdAstra} alt="Starfall Ad Astra"  style={{width: '80%', height: '100%', objectFit: 'cover'}}/>
       </div>
     </div>
   );
