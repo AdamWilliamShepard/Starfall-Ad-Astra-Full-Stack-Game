@@ -1,10 +1,18 @@
 import React from 'react';
 import LogOutButton from '../LogOutButton/LogOutButton';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 function UserPage() {
-  // this component doesn't do much to start, just renders some user reducer info to the DOM
+  const dispatch = useDispatch()
   const user = useSelector((store) => store.user);
+  const heroStats = useSelector(store => store.heroStatsReducer)
+  console.log('This is heroStats', heroStats)
+
+  useEffect (() => {
+    dispatch({type: "GET_HERO_STATS"})
+  }, [])
+
   return (
     <div className="container">
       <h2>Welcome, {user.username}!</h2>
@@ -32,7 +40,7 @@ function UserPage() {
             HP:
           </td>
           <td>
-            999
+            {heroStats[0].HP}
           </td>
         </tr>
         <tr>
@@ -40,7 +48,7 @@ function UserPage() {
             Energy:
           </td>
           <td>
-            999
+          {heroStats[0].Energy}
           </td>
         </tr>
         <tr>
@@ -48,7 +56,7 @@ function UserPage() {
             Attack:
           </td>
           <td>
-            999
+          {heroStats[0].Attack}
           </td>
         </tr>
         <tr>
@@ -56,7 +64,7 @@ function UserPage() {
             Defense:
           </td>
           <td>
-            999
+          {heroStats[0].Defense}
           </td>
         </tr>
         <tr>
@@ -64,7 +72,7 @@ function UserPage() {
             EXP:
           </td>
           <td>
-            999
+          {heroStats[0].Exp}
           </td>
         </tr>
       </table>

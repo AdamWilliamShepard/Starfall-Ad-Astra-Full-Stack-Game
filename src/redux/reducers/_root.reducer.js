@@ -6,8 +6,8 @@ import equipmentReducer from './equipment.reducer';
 import heroActionsReducer from './heroactions.reducer';
 import heroInfoReducer from './heroinfo.reducer';
 import heroInventoryReducer from './heroinventory.reducer';
-import heroStats from './herostats.reducer';  
 import savePositionReducer from './saveposition.reducer';
+import heroStatsReducer from './herostats.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -23,8 +23,8 @@ const rootReducer = combineReducers({
   heroActionsReducer,
   heroInfoReducer,
   heroInventoryReducer,
-  heroStats,
   savePositionReducer,
+  heroStatsReducer,
 });
 
 export default rootReducer;

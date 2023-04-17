@@ -1,6 +1,6 @@
 const heroInventoryReducer = (state = [], action) => {
     switch (action.type) {
-        case 'GET_HERO_INVENTORY':
+        case 'SET_HERO_INVENTORY':
             return action.payload;
         default:
             return state;

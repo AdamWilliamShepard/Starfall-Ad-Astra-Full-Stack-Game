@@ -1,10 +1,10 @@
-const heroStats = (state = [], action) => {
+const heroStatsReducer = (state = [], action) => {
     switch (action.type) {
-        case 'GET_HERO_STATS':
+        case 'SET_HERO_STATS':
             return action.payload;
         default:
             return state;
     }
 };
 
-export default heroStats
+export default heroStatsReducer
