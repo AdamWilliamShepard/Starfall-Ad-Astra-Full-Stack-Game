@@ -7,8 +7,13 @@ const {
 
 
 router.get('/', rejectUnauthenticated, (req, res) => {
-let queryText = `SELECT * FROM "HeroStats"`
-pool.query(queryText)
+let queryText = `SELECT * 
+FROM "HeroStats"
+INNER JOIN "HeroInfo"
+USING (user_id)
+WHERE user_id = $1;`
+let queryValues = [req.user.id]
+pool.query(queryText, queryValues)
 .then((result) => {
     res.send(result.rows)
 })

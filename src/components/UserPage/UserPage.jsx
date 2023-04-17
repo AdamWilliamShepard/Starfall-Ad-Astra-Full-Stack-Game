@@ -24,7 +24,7 @@ function UserPage() {
             Name:
           </td>
           <td>
-            HERO
+          {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"}
           </td>
         </tr>
         <tr>
@@ -32,7 +32,7 @@ function UserPage() {
             Background:
           </td>
           <td>
-            TRAGIC
+          {heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}
           </td>
         </tr>
         <tr>
