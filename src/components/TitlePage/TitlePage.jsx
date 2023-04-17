@@ -1,4 +1,5 @@
 import React from 'react';
+import StarfallAdAstra from '../img/StarfallAdAstra.png'
 
 // This is one of our simplest components
 // It doesn't have local state,
@@ -6,10 +7,11 @@ import React from 'react';
 // or even care what the redux state is'
 
 function TitlePage() {
+
   return (
     <div className="container">
       <div>
-        <p>This is the title page!</p>
+      <img src={StarfallAdAstra} alt="Starfall Ad Astra"  style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import Canvas from '../Canvas/Canvas';
-import TitlePage from '../../TitlePage/TitlePage';
+import TitlePage from '../TitlePage/TitlePage';
 
 import './App.css';
 
@@ -112,18 +112,19 @@ function App() {
             }
           </Route>
 
-          <Route exact path="/canvas">
-            <Canvas />
-          </Route>
-
           <Route exact path="/title">
             <TitlePage />
+          </Route>
+
+          <Route exact path="/canvas">
+            <Canvas />
           </Route>
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
             <h1>404</h1>
           </Route>
+
         </Switch>
         <Footer />
       </div>
