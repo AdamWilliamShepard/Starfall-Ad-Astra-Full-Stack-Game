@@ -19,6 +19,8 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+import Canvas from '../Canvas/Canvas';
+import TitlePage from '../../TitlePage/TitlePage';
 
 import './App.css';
 
@@ -108,6 +110,14 @@ function App() {
               // Otherwise, show the Landing page
               <LandingPage />
             }
+          </Route>
+
+          <Route exact path="/canvas">
+            <Canvas />
+          </Route>
+
+          <Route exact path="/title">
+            <TitlePage />
           </Route>
 
           {/* If none of the other routes matched, we will show a 404. */}
