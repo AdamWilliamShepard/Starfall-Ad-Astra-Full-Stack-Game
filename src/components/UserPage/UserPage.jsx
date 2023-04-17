@@ -40,7 +40,7 @@ function UserPage() {
             HP:
           </td>
           <td>
-            {heroStats[0].HP}
+            {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}
           </td>
         </tr>
         <tr>
@@ -48,7 +48,7 @@ function UserPage() {
             Energy:
           </td>
           <td>
-          {heroStats[0].Energy}
+          {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}
           </td>
         </tr>
         <tr>
@@ -56,7 +56,7 @@ function UserPage() {
             Attack:
           </td>
           <td>
-          {heroStats[0].Attack}
+          {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}
           </td>
         </tr>
         <tr>
@@ -64,7 +64,7 @@ function UserPage() {
             Defense:
           </td>
           <td>
-          {heroStats[0].Defense}
+          {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}
           </td>
         </tr>
         <tr>
@@ -72,7 +72,7 @@ function UserPage() {
             EXP:
           </td>
           <td>
-          {heroStats[0].Exp}
+          {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}
           </td>
         </tr>
       </table>
