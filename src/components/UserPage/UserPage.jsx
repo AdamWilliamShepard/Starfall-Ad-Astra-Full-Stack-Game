@@ -18,64 +18,19 @@ function UserPage() {
       <h2>Welcome, {user.username}!</h2>
       <p>Your ID is: {user.id}</p>
       <p>Here is your current hero!</p>
-      <table>
-        <tr>
-          <td>
-            Name:
-          </td>
-          <td>
-          {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Background:
-          </td>
-          <td>
-          {heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            HP:
-          </td>
-          <td>
-            {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Energy:
-          </td>
-          <td>
-          {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Attack:
-          </td>
-          <td>
-          {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Defense:
-          </td>
-          <td>
-          {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            EXP:
-          </td>
-          <td>
-          {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}
-          </td>
-        </tr>
-      </table>
+
+      {/* Need to add conditional rendering in the event that they have not yet created a hero! */}
+
+      {/* Need to style this page! */}
+
+            Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"}<br />
+            Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
+            HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}<br />
+            Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}<br />
+            Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}<br />
+            Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}<br />
+            EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}<br />
+
       <LogOutButton className="btn" />
     </div>
   );
