@@ -4,6 +4,8 @@ import registrationSaga from './registration.saga';
 import userSaga from './user.saga';
 import getHeroStatsSaga from './getHeroStats.saga';
 import postHeroInfoSaga from './postHeroInfo.saga';
+import changeProfileCreatedSaga from './changeProfileCreated.saga';
+
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -19,5 +21,6 @@ export default function* rootSaga() {
     userSaga(),
     getHeroStatsSaga(),
     postHeroInfoSaga(),
+    changeProfileCreatedSaga(),
   ]);
 }

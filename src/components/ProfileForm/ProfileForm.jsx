@@ -15,14 +15,19 @@ import Select from '@mui/material/Select';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 export default function ProfileForm() {
 
   const dispatch =useDispatch()
+  const history = useHistory()
 
   let [infoToAdd, setInfoToAdd] =useState({Name: '', Background:'', Avatar:''})
 
   const [Avatar, setAvatar] = useState('');
+  const user = useSelector((store) => store.user);
+  console.log('this is user.id', user.id)
 
   const handleChange = (event) => {
     setAvatar(event.target.value);
@@ -51,7 +56,13 @@ const addInfo = (infoToAdd) => {
       dispatch({
           type: 'POST_HERO_INFO',
           payload: infoToAdd
-      })
+      }),
+      dispatch ({
+        type:"CHANGE_PROFILE_CREATED",
+        payload: user.id
+      }),
+      dispatch({ type: "FETCH_USER" })
+      window.location.reload()
   }
 }
 
