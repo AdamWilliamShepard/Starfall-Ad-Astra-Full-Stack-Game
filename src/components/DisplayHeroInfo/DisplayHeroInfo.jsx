@@ -6,7 +6,12 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import GoldKnight from '../img/GoldKnight.png'
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -16,20 +21,21 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-
 function DisplayHeroInfo() {
 
   const dispatch = useDispatch()
   const user = useSelector((store) => store.user);
   const heroStats = useSelector(store => store.heroStatsReducer)
   console.log('This is heroStats', heroStats)
+  const heroInventory = useSelector((store => store.heroInventoryReducer))
+  console.log('This is heroInventory', heroInventory)
 
   useEffect(() => {
-    dispatch({ type: "GET_HERO_STATS" })
+    dispatch({ type: "GET_HERO_STATS" }),
+    dispatch({type: 'GET_HERO_INVENTORY'})
   }, [])
 
   const specialAvatar = heroStats && heroStats.length > 0 ? heroStats[0].Avatar : null;
-
 
   return (
     <>
@@ -67,16 +73,39 @@ function DisplayHeroInfo() {
           </Grid>
           <Grid item xs={6}>
             <Item>
-              Item 1: HEALING POTION ❌<br />
-              Item 2: MANA POTION❌<br />
-              Item 3: ATTACK POWER SEED❌<br />
-              Item 4: DEFENSE POWER SEED❌<br />
-              Item 5: HP UP SEED❌<br />
-              Item 6: EXP SEED❌<br />
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Icon</TableCell>
+                      <TableCell align="right">Quantity</TableCell>
+                      <TableCell align="right">Name</TableCell>
+                      <TableCell align="right">Description</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {heroInventory.map((item) => (
+                      <TableRow
+                        key={item.id}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        {/* <TableCell component="th" scope="row">
+                          {row.id}
+                        </TableCell> */}
+                        <TableCell align="right"><img src={item.ItemIcon} height="50" /></TableCell>
+                        <TableCell align="right">{item.ItemQuantity}</TableCell>
+                        <TableCell align="right">{item.ItemName}</TableCell>
+                        <TableCell align="right">{item.ItemDescrip}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Item>
           </Grid>
         </Grid>
       </Box>
+      < br />
       <LogOutButton className="btn" />
     </>
   );

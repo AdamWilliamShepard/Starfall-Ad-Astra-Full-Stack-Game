@@ -37,9 +37,9 @@ function Nav() {
           </>
         )}
 
-        <Link className="navLink" to="/title">
+        {/* <Link className="navLink" to="/title">
           Title
-        </Link>
+        </Link> */}
 
         {/* <Link className="navLink" to="/about">
           About
