@@ -7,7 +7,7 @@ function RegisterPage() {
   const history = useHistory();
 
   return (
-    <div>
+    <div id="container1">
       <RegisterForm />
 
       <center>
