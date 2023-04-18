@@ -10,7 +10,7 @@ function Nav() {
 
   return (
     <div className="nav">
-      <Link to="/home">
+      <Link to="/title">
         <img src={StarfallLogo} alt="logo" style={{width: '40%', height: '100%', objectFit: 'cover'}} />
       </Link>
       <div>

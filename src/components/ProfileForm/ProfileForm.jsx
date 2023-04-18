@@ -70,7 +70,7 @@ const addInfo = (infoToAdd) => {
   <><div className="container" id="container1">
     <Card sx={{
       maxWidth: 500,
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backgroundColor: 'white',
 
     }}>
       <CardContent sx={{ width: '100%' }}>
