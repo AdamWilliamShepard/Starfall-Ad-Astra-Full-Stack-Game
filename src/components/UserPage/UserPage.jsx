@@ -10,7 +10,6 @@ function UserPage() {
 
   const dispatch = useDispatch()
   const user = useSelector((store) => store.user);
-  const heroStats = useSelector(store => store.heroStatsReducer)
 
   useEffect(() => {
     dispatch({ type: "GET_HERO_STATS" })
@@ -22,7 +21,6 @@ function UserPage() {
       <div className="container black-page" id="container1">
         <h2>Welcome, {user.username}!</h2>
         {user.profileCreated ? <DisplayHeroInfo /> : <ProfileForm />}
-
       </div>
     </>
   );

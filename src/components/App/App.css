@@ -122,3 +122,14 @@ Page Styles
   min-height: 100vh;
 }
 
+
+/* --------------------------------------------------------------------------------
+Container Styles
+-------------------------------------------------------------------------------- */
+
+.container2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

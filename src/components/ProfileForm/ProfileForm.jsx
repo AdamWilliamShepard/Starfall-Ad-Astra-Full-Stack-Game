@@ -67,16 +67,17 @@ const addInfo = (infoToAdd) => {
 }
 
   return (
-  <><div className="container" id="container1">
+  <><div className="container2" id="container1">
     <Card sx={{
       maxWidth: 500,
+      minWidth: 400,
       backgroundColor: 'white',
 
     }}>
       <CardContent sx={{ width: '100%' }}>
         <div>
           Create Your Hero Profile! <br /><br />
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <FormControl sx={{ m: 1, minWidth: 3 }}>
             <InputLabel id="demo-simple-select-helper-label">Avatar</InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
@@ -88,9 +89,9 @@ const addInfo = (infoToAdd) => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={'Gold Knight'}>Gold Knight</MenuItem>
-              <MenuItem value={'Dog Ninja'}>Dog Ninja</MenuItem>
-              <MenuItem value={'Green Ninja'}>Green Ninja</MenuItem>
+              <MenuItem value={'https://i.imgur.com/wy4RKGv.png'}>Gold Knight</MenuItem>
+              <MenuItem value={'https://i.imgur.com/FgSII4v.png'}>Dog Ninja</MenuItem>
+              <MenuItem value={'https://i.imgur.com/BJZbhCc.png'}>Green Ninja</MenuItem>
             </Select>
             <FormHelperText>Select an Avatar</FormHelperText>
           </FormControl>

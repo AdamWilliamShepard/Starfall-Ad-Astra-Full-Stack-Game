@@ -16,7 +16,7 @@ function LoginPage() {
           onClick={() => {
             history.push('/registration');
           }}
-        >
+>
           Register
         </button>
       </center>
