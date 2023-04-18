@@ -21,6 +21,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import Canvas from '../Canvas/Canvas';
 import TitlePage from '../TitlePage/TitlePage';
+import ProfileForm from '../ProfileForm/ProfileForm';
 
 import './App.css';
 
@@ -118,6 +119,10 @@ function App() {
 
           <Route exact path="/canvas">
             <Canvas />
+          </Route>
+
+          <Route exact path="/form">
+            <ProfileForm />
           </Route>
 
           {/* If none of the other routes matched, we will show a 404. */}

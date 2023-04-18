@@ -47,4 +47,22 @@ router.post('/logout', (req, res) => {
   res.sendStatus(200);
 });
 
+router.put('/:id', rejectUnauthenticated, (req, res) => {
+  console.log('this is req.params', req.params)
+  queryValues = [req.params.id]
+  const queryText = `
+  UPDATE "user"
+  SET "profileCreated" = TRUE
+  WHERE "id" = $1;`
+  pool.query(queryText, queryValues)
+    .then((result) => {
+      console.log('Sucessful PUT request for editing profile creation')
+      res.sendStatus(200)
+    })
+    .catch((error) => {
+      console.log('Error making database query- Create profile', error)
+      res.sendStatus(500)
+    })
+})
+
 module.exports = router;
