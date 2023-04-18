@@ -27,12 +27,17 @@ function DisplayHeroInfo() {
   const user = useSelector((store) => store.user);
   const heroStats = useSelector(store => store.heroStatsReducer)
   console.log('This is heroStats', heroStats)
+
   const heroInventory = useSelector((store => store.heroInventoryReducer))
   console.log('This is heroInventory', heroInventory)
 
+  const equipment = useSelector((store => store.equipmentReducer))
+  console.log('This is equipment', equipment)
+
   useEffect(() => {
     dispatch({ type: "GET_HERO_STATS" }),
-    dispatch({type: 'GET_HERO_INVENTORY'})
+      dispatch({ type: 'GET_HERO_INVENTORY' }),
+      dispatch({ type: 'GET_EQUIPMENT' })
   }, [])
 
   const specialAvatar = heroStats && heroStats.length > 0 ? heroStats[0].Avatar : null;
@@ -55,33 +60,72 @@ function DisplayHeroInfo() {
           </Grid>
           <Grid item xs={6}>
             <Item>
-              Head Equip: COPPER HELMET❌<br />
-              Body Equip: COPPER ARMOR❌<br />
-              Weapon Equip: COPPER SWORD❌<br />
-              Item 1 Equip: COPPER BRACELET❌<br />
-              Item 2 Equip: COPPER NECKLACE❌<br />
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
-              HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}✅<br />
-              Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}✅<br />
-              Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}✅<br />
-              Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}✅<br />
-              EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}✅<br />
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
+              <h3>Equipment</h3>
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Icon</TableCell>
-                      <TableCell align="right">Quantity</TableCell>
-                      <TableCell align="right">Name</TableCell>
-                      <TableCell align="right">Description</TableCell>
                     </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {equipment.map((item) => (
+                      <TableRow
+                        key={item.id}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell align="right"><img src={item.EquipIcon} height="50" /></TableCell>
+                        <TableCell align="right">{item.Slot}</TableCell>
+                        <TableCell align="right">{item.EquipName}</TableCell>
+                        <TableCell align="right">{item.EquipDescrip}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Item>
+          </Grid>
+          <Grid item xs={6}>
+            <Item>
+              <h3>Stats</h3>
+              {/* HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}✅<br />
+              Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}✅<br />
+              Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}✅<br />
+              Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}✅<br />
+              EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}✅<br /> */}
+
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                  </TableHead>
+                  <TableBody>
+
+                      <TableRow>
+                        <TableCell align="left">HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left"> Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left"> Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}</TableCell>
+                      </TableRow>
+
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Item>
+          </Grid>
+          <Grid item xs={6}>
+            <Item>
+              <h3>Inventory</h3>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
                   </TableHead>
                   <TableBody>
                     {heroInventory.map((item) => (
@@ -89,9 +133,6 @@ function DisplayHeroInfo() {
                         key={item.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        {/* <TableCell component="th" scope="row">
-                          {row.id}
-                        </TableCell> */}
                         <TableCell align="right"><img src={item.ItemIcon} height="50" /></TableCell>
                         <TableCell align="right">{item.ItemQuantity}</TableCell>
                         <TableCell align="right">{item.ItemName}</TableCell>

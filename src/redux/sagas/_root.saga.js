@@ -6,6 +6,7 @@ import getHeroStatsSaga from './getHeroStats.saga';
 import postHeroInfoSaga from './postHeroInfo.saga';
 import changeProfileCreatedSaga from './changeProfileCreated.saga';
 import getHeroInventorySaga from './getHeroInventory.saga';
+import getEquipmentSaga from './getEquipment.saga';
 
 
 // rootSaga is the primary saga.
@@ -24,5 +25,6 @@ export default function* rootSaga() {
     postHeroInfoSaga(),
     changeProfileCreatedSaga(),
     getHeroInventorySaga(),
+    getEquipmentSaga(),
   ]);
 }
