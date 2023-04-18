@@ -48,6 +48,10 @@ function Nav() {
         <Link className="navLink" to="/canvas">
           Canvas
         </Link>
+
+        <Link className="navLink" to="/form">
+          Form
+        </Link>
       </div>
     </div>
   );
