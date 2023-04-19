@@ -2,19 +2,9 @@ import React from 'react';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import axios from 'axios';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box, Paper, Grid, styled } from '@mui/material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -62,7 +52,6 @@ function ProfileDetail() {
       }
     });
   }
-  
 
   function handleEditClick() {
     dispatch({ type: 'SET_EDIT_INFO', payload: heroStats[0] })
@@ -71,12 +60,12 @@ function ProfileDetail() {
 
   function handleSubmitChange() {
     axios.put(`/api/heroStats/${reducerHeroToEdit.id}`, reducerHeroToEdit)
-    .then(response => {
-      dispatch({type: 'EDIT_CLEAR'}),
-      dispatch({ type: "GET_HERO_STATS" })
-    }).catch(error => {
-      console.log('error on put', error)
-    })
+      .then(response => {
+        dispatch({ type: 'EDIT_CLEAR' }),
+          dispatch({ type: "GET_HERO_STATS" })
+      }).catch(error => {
+        console.log('error on put', error)
+      })
     setEditState(false)
   }
 
@@ -84,7 +73,6 @@ function ProfileDetail() {
     <>
       <div className="container black-page" id="container1" >
         <h2>Here is your current Hero!</h2>
-
         <Box sx={{ width: '100%' }}>
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid item xs={6}>
@@ -191,6 +179,7 @@ function ProfileDetail() {
                           <TableCell align="right">{item.ItemQuantity}</TableCell>
                           <TableCell align="right">{item.ItemName}</TableCell>
                           <TableCell align="right">{item.ItemDescrip}</TableCell>
+                          <TableCell align="right"><button>Delete</button></TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -201,7 +190,6 @@ function ProfileDetail() {
           </Grid>
         </Box>
         < br />
-
         <Link to="/login">
           <LogOutButton className="btn" />
         </Link>
@@ -210,5 +198,4 @@ function ProfileDetail() {
   );
 }
 
-// this allows us to use <App /> in index.js
 export default ProfileDetail;

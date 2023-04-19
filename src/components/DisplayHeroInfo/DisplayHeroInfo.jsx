@@ -1,15 +1,9 @@
 import React from 'react';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
+import { Paper, Card, CardActions, CardContent, CardMedia, Typography, styled } from '@mui/material';
 
 
 const Item = styled(Paper)(({ theme }) => ({
