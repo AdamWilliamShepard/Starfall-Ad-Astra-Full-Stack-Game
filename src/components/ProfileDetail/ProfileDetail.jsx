@@ -69,6 +69,11 @@ function ProfileDetail() {
     setEditState(false)
   }
 
+  function handleDelete(itemId){
+    dispatch({ type: 'DELETE_HERO_INVENTORY', payload: itemId })
+    dispatch ({type: 'GET_EQUIPMENT' })
+  }
+
   return (
     <>
       <div className="container black-page" id="container1" >
@@ -179,7 +184,7 @@ function ProfileDetail() {
                           <TableCell align="right">{item.ItemQuantity}</TableCell>
                           <TableCell align="right">{item.ItemName}</TableCell>
                           <TableCell align="right">{item.ItemDescrip}</TableCell>
-                          <TableCell align="right"><button>Delete</button></TableCell>
+                          <TableCell align="right"><button onClick={() => handleDelete(item.id)}>Delete</button></TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

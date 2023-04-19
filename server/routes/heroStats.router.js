@@ -79,7 +79,21 @@ router.put('/:id', (req, res) => {
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log(`Error making database query ${sqlText}`, error);
+            console.log(`Error making database query`, error);
+            res.sendStatus(500);
+        });
+});
+
+router.delete('/delete/:id', (req, res) => {
+    const queryValues = [req.params.id]
+    const queryText = `DELETE FROM "HeroInventory"
+    WHERE id = $1;`;
+    pool.query(queryText, queryValues)
+        .then((result) => {
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log(`Error making database query`, error);
             res.sendStatus(500);
         });
 });
