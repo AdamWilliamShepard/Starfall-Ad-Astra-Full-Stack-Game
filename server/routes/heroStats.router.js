@@ -69,4 +69,19 @@ router.post('/', rejectUnauthenticated, (req, res) => {
     })
 });
 
+router.put('/:id', (req, res) => {
+    const queryValues = [req.body.Name, req.body.Background, req.params.id]
+    const queryText = `UPDATE "HeroInfo" 
+    SET "Name" = $1, "Background" = $2 
+    WHERE id = $3`;
+    pool.query(queryText, queryValues)
+        .then((result) => {
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log(`Error making database query ${sqlText}`, error);
+            res.sendStatus(500);
+        });
+});
+
 module.exports = router;

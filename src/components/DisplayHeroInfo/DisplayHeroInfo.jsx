@@ -12,7 +12,6 @@ import Typography from '@mui/material/Typography';
 import { useHistory } from 'react-router-dom';
 
 
-
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -25,15 +24,7 @@ function DisplayHeroInfo() {
 
   const dispatch = useDispatch()
   const history = useHistory()
-  const user = useSelector((store) => store.user);
   const heroStats = useSelector(store => store.heroStatsReducer)
-  console.log('This is heroStats', heroStats)
-
-  const heroInventory = useSelector((store => store.heroInventoryReducer))
-  console.log('This is heroInventory', heroInventory)
-
-  const equipment = useSelector((store => store.equipmentReducer))
-  console.log('This is equipment', equipment)
 
   useEffect(() => {
     dispatch({ type: "GET_HERO_STATS" }),
@@ -51,8 +42,6 @@ function DisplayHeroInfo() {
     <>
       <h2>Here is your current Hero!</h2>
       <div className="container2" id="container1">
-
-
         <Card sx={{
           maxWidth: 700,
           width: '75%',
@@ -81,9 +70,6 @@ function DisplayHeroInfo() {
           </CardActions>
         </Card>
       </div>
-
-
-
       < br />
       <LogOutButton className="btn" />
     </>
