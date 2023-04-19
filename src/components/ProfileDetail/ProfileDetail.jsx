@@ -3,6 +3,8 @@ import LogOutButton from '../LogOutButton/LogOutButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
+import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -34,6 +36,8 @@ function ProfileDetail() {
   const equipment = useSelector((store => store.equipmentReducer))
   console.log('This is equipment', equipment)
 
+  const history = useHistory()
+
   useEffect(() => {
     dispatch({ type: "GET_HERO_STATS" }),
       dispatch({ type: 'GET_HERO_INVENTORY' }),
@@ -44,12 +48,10 @@ function ProfileDetail() {
 
   return (
     <>
-      <div className="container" id="container1">
+      <div className="container black-page" id="container1" >
         <h2>Here is your current Hero!</h2>
 
-      </div>
-
-      <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={6}>
             <Item>
@@ -88,12 +90,6 @@ function ProfileDetail() {
           <Grid item xs={6}>
             <Item>
               <h3>Stats</h3>
-              {/* HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}✅<br />
-              Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}✅<br />
-              Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}✅<br />
-              Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}✅<br />
-              EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}✅<br /> */}
-
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
@@ -148,7 +144,11 @@ function ProfileDetail() {
         </Grid>
       </Box>
       < br />
+
+      <Link to="/login">
       <LogOutButton className="btn" />
+      </Link>
+      </div>
     </>
   );
 }

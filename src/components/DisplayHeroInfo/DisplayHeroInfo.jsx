@@ -3,21 +3,13 @@ import LogOutButton from '../LogOutButton/LogOutButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -32,6 +24,7 @@ const Item = styled(Paper)(({ theme }) => ({
 function DisplayHeroInfo() {
 
   const dispatch = useDispatch()
+  const history = useHistory()
   const user = useSelector((store) => store.user);
   const heroStats = useSelector(store => store.heroStatsReducer)
   console.log('This is heroStats', heroStats)
@@ -51,145 +44,43 @@ function DisplayHeroInfo() {
   const specialAvatar = heroStats && heroStats.length > 0 ? heroStats[0].Avatar : null;
 
   const showDetails = () => {
-    history.pushState(`/details/${heroStats.id}`)
+    history.push(`/details/${heroStats[0].id}`)
   }
 
   return (
     <>
-      <div className="container" id="container1">
-        <h2>Here is your current Hero!</h2>
+      <h2>Here is your current Hero!</h2>
+      <div className="container2" id="container1">
 
+
+        <Card sx={{
+          maxWidth: 700,
+          width: '75%',
+          backgroundColor: 'white',
+          cursor: 'grab',
+          transition: 'all 0.2s ease-in-out',
+          '&:hover': {
+            backgroundColor: 'rgba(32, 119, 212, 0.6)',
+            boxShadow: '0px 0px 20px 5px rgba(0,0,0,0.5)',
+            transform: 'scale(1.05)'
+          },
+          display: 'flex',
+          justifyContent: 'center'
+        }} onClick={showDetails}>
+          <CardMedia
+            sx={{ height: 150, width: 300, justifyContent: "center" }}
+            image={specialAvatar}
+          />
+          <CardContent sx={{ width: '100%', alignItems: "center" }}>
+              <Typography gutterBottom variant="h5" component="div">
+                Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
+                Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
+              </Typography>
+          </CardContent>
+          <CardActions sx={{ justifyContent: "center" }}>
+          </CardActions>
+        </Card>
       </div>
-
-      <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={6}>
-            <Item>
-              {specialAvatar && <img src={specialAvatar} alt="Avatar" height='100' />}<br />
-              Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-              Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
-              <h3>Equipment</h3>
-              <img src="" alt="" />
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {equipment.map((item) => (
-                      <TableRow
-                        key={item.id}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell align="right"><img src={item.EquipIcon} height="50" /></TableCell>
-                        <TableCell align="right">{item.Slot}</TableCell>
-                        <TableCell align="right">{item.EquipName}</TableCell>
-                        <TableCell align="right">{item.EquipDescrip}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
-              <h3>Stats</h3>
-              {/* HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}✅<br />
-              Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}✅<br />
-              Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}✅<br />
-              Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}✅<br />
-              EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}✅<br /> */}
-
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                  </TableHead>
-                  <TableBody>
-
-                    <TableRow>
-                      <TableCell align="left">HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left"> Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left"> Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}</TableCell>
-                    </TableRow>
-
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
-              <h3>Inventory</h3>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                  </TableHead>
-                  <TableBody>
-                    {heroInventory.map((item) => (
-                      <TableRow
-                        key={item.id}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell align="right"><img src={item.ItemIcon} height="50" /></TableCell>
-                        <TableCell align="right">{item.ItemQuantity}</TableCell>
-                        <TableCell align="right">{item.ItemName}</TableCell>
-                        <TableCell align="right">{item.ItemDescrip}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Item>
-          </Grid>
-        </Grid>
-      </Box>
-
-
-      <Card sx={{
-        maxWidth: 500,
-        midWidth: 200,
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        cursor: 'grab',
-        transition: 'all 0.2s ease-in-out',
-        '&:hover': {
-          backgroundColor: 'rgba(32, 119, 212, 0.6)',
-          boxShadow: '0px 0px 20px 5px rgba(0,0,0,0.5)',
-          transform: 'scale(1.05)'
-        }
-      }}>
-        <CardMedia
-          sx={{ height: 325, width: "auto", justifyContent: "center" }}
-          image={specialAvatar}
-          title=''
-          onClick={showDetails}
-        />
-        <CardContent sx={{ width: '100%' }}>
-          <form onSubmit=''>
-            <Typography gutterBottom variant="h5" component="div">
-              Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-              Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
-            </Typography>
-          </form>
-        </CardContent>
-        <CardActions sx={{ justifyContent: "center" }}>
-        </CardActions>
-      </Card>
 
 
 
