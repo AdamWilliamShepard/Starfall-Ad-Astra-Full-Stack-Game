@@ -12,14 +12,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-
-
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -29,7 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function DisplayHeroInfo() {
+function ProfileDetail() {
 
   const dispatch = useDispatch()
   const user = useSelector((store) => store.user);
@@ -49,10 +41,6 @@ function DisplayHeroInfo() {
   }, [])
 
   const specialAvatar = heroStats && heroStats.length > 0 ? heroStats[0].Avatar : null;
-
-  const showDetails = () => {
-    history.pushState(`/details/${heroStats.id}`)
-  }
 
   return (
     <>
@@ -112,21 +100,21 @@ function DisplayHeroInfo() {
                   </TableHead>
                   <TableBody>
 
-                    <TableRow>
-                      <TableCell align="left">HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left"> Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left"> Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}</TableCell>
-                    </TableRow>
+                      <TableRow>
+                        <TableCell align="left">HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left"> Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left"> Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}</TableCell>
+                      </TableRow>
 
                   </TableBody>
                 </Table>
@@ -159,40 +147,6 @@ function DisplayHeroInfo() {
           </Grid>
         </Grid>
       </Box>
-
-
-      <Card sx={{
-        maxWidth: 500,
-        midWidth: 200,
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        cursor: 'grab',
-        transition: 'all 0.2s ease-in-out',
-        '&:hover': {
-          backgroundColor: 'rgba(32, 119, 212, 0.6)',
-          boxShadow: '0px 0px 20px 5px rgba(0,0,0,0.5)',
-          transform: 'scale(1.05)'
-        }
-      }}>
-        <CardMedia
-          sx={{ height: 325, width: "auto", justifyContent: "center" }}
-          image={specialAvatar}
-          title=''
-          onClick={showDetails}
-        />
-        <CardContent sx={{ width: '100%' }}>
-          <form onSubmit=''>
-            <Typography gutterBottom variant="h5" component="div">
-              Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-              Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
-            </Typography>
-          </form>
-        </CardContent>
-        <CardActions sx={{ justifyContent: "center" }}>
-        </CardActions>
-      </Card>
-
-
-
       < br />
       <LogOutButton className="btn" />
     </>
@@ -200,4 +154,4 @@ function DisplayHeroInfo() {
 }
 
 // this allows us to use <App /> in index.js
-export default DisplayHeroInfo;
+export default ProfileDetail;

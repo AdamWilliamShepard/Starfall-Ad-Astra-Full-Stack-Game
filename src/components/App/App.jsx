@@ -22,6 +22,7 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import Canvas from '../Canvas/Canvas';
 import TitlePage from '../TitlePage/TitlePage';
 import ProfileForm from '../ProfileForm/ProfileForm';
+import ProfileDetail from '../ProfileDetail/ProfileDetail';
 
 import './App.css';
 
@@ -124,6 +125,10 @@ function App() {
           <Route exact path="/form">
             <ProfileForm />
           </Route>
+
+          {/* Details page */}
+          <Route exact path="/details/:id/" component={ProfileDetail} />
+
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
