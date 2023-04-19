@@ -48,12 +48,10 @@ function ProfileDetail() {
 
   return (
     <>
-      <div className="container" id="container1">
+      <div className="container black-page" id="container1" >
         <h2>Here is your current Hero!</h2>
 
-      </div>
-
-      <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={6}>
             <Item>
@@ -146,9 +144,11 @@ function ProfileDetail() {
         </Grid>
       </Box>
       < br />
+
       <Link to="/login">
       <LogOutButton className="btn" />
       </Link>
+      </div>
     </>
   );
 }
