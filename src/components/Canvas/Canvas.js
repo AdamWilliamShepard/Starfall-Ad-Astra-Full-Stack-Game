@@ -4,19 +4,14 @@ import { useSelector } from 'react-redux';
 
 function Canvas(props) {
     const canvasRef = useRef(null);
-    //collision is an array which comes from the package json from the collision map
     const collision = useSelector(store => store.collisionReducer)
-    // console.log(collision)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
-    // console.log(battlezone)
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        // console.log(context)
 
-        // loops through our array for each row (which is 70 wide) and push
-        //them into a new array by row.
+        // loops through our array for each row (which is 70 wide) and push them into a new array by row.
         const collisionMap = []
         for (let i = 0; i < collision.length; i += 70) {
             collisionMap.push(collision.slice(i, 70 + i))
@@ -26,7 +21,6 @@ function Canvas(props) {
         for (let i = 0; i < battleZoneData.length; i += 70) {
             battleZonesMap.push(battleZoneData.slice(i, 70 + i))
         }
-        // console.log(battleZonesMap)
 
         //individual boundary blocks which will create our collision map
         class Boundary {
@@ -103,7 +97,8 @@ function Canvas(props) {
                                 x: j * Boundary.width + offset.x,
                                 y: i * Boundary.height + offset.y
                             }
-                        }))
+                        })
+                    )
             })
         })
 
@@ -118,20 +113,18 @@ function Canvas(props) {
                                 x: j * Boundary.width + offset.x,
                                 y: i * Boundary.height + offset.y
                             }
-                        }))
+                        })
+                    )
             })
         })
         console.log(battleZones)
 
-        //Our background image
-        const image = new Image()
-        image.src = require('../img/PelletTown.png')
+        const backgroundImage = new Image()
+        backgroundImage.src = require('../img/PelletTown.png')
 
-        //Our foreground image
         const foregroundImage = new Image()
         foregroundImage.src = require('../img/foregroundObjects.png')
 
-        //Our player image
         const playerDownImage = new Image()
         playerDownImage.src = require('../img/playerDown.png')
 
@@ -168,7 +161,7 @@ function Canvas(props) {
                 x: offset.x,
                 y: offset.y
             },
-            image: image
+            image: backgroundImage
         })
 
         //Create a new sprite called foreground using the image and at the given coords.
@@ -209,9 +202,13 @@ function Canvas(props) {
             )
         }
 
+        const battle = {
+            initiated: false
+        }
+
         // Loop the image continously to provide animation.
         function animate() {
-            window.requestAnimationFrame(animate)
+            const animationId = window.requestAnimationFrame(animate)
 
             //The background image to be displayed, the x coord and the y coord
             background.draw()
@@ -225,6 +222,12 @@ function Canvas(props) {
             player.draw()
             foreground.draw()
 
+            let moving = true
+            player.moving = false
+
+            if (battle.initiated) return
+
+            //activate a battle
             if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
                 for (let i = 0; i < battleZones.length; i++) {
                     const battleZone = battleZones[i]
@@ -240,7 +243,29 @@ function Canvas(props) {
                         overlappingArea > player.width * player.height / 2 //If 1/2 of the sprite is in the battle zone, it is colliding
                         && Math.random() < 0.01
                     ) {
-                        console.log('Battlezone collision')
+                        console.log('activate battle')
+                        //deactivate current activation loop
+                        // window.cancelAnimationFrame(animationId)
+                        battle.initiated = true
+                        gsap.to('#overlappingDiv', {
+                            opacity: 1,
+                            repeat: 3,
+                            yoyo: true,
+                            duration: 0.4,
+                            onComplete() {
+                                gsap.to('#overlappingDiv', {
+                                    opacity: 1,
+                                    duration: 0.4,
+                                    onComplete() {
+                                        animateBattle()
+                                        gsap.to('#overlappingDiv', {
+                                            opacity: 0,
+                                            duration: 0.4
+                                        })
+                                    }
+                                })
+                            }
+                        })
                         break
                     }
                 }
@@ -248,8 +273,8 @@ function Canvas(props) {
 
             //If any of the associated keys are pressed moved the background position by 3 pixels each 'tick' and detecting for boundary
             //collision
-            let moving = true
-            player.moving = false
+            // let moving = true
+            // player.moving = false
             if (keys.w.pressed && lastkey === 'w') {
                 player.moving = true
                 player.image = player.sprites.up
@@ -264,8 +289,7 @@ function Canvas(props) {
                                 y: boundary.position.y + 3
                             }
                         }
-                    })
-                    ) {
+                    })) {
                         console.log('colliding')
                         moving = false
                         break
@@ -350,7 +374,21 @@ function Canvas(props) {
         }
 
         //calling the animate function
-        animate()
+        // animate() ****************************************De-activated for the moment so I can work on the battle sequence
+        const battleBackgoundImage = new Image()
+        battleBackgoundImage.src = require('../img/battleBackground.png')
+        const battleBackground = new Sprite({
+            position: {
+                x: 0,
+                y: 0
+            },
+            image: battleBackgoundImage
+        })
+        function animateBattle() {
+            window.requestAnimationFrame(animateBattle)
+            battleBackground.draw()
+        }
+        animateBattle() //************************************Activated so I can work on this. */
 
         //event listener for key-down presses
         let lastkey = ''
@@ -395,10 +433,13 @@ function Canvas(props) {
     }, []);
 
     return (
-        <canvas ref={canvasRef}
-            width="1024"
-            height="576"
-            {...props}></canvas>
+        <div className='battleTransitionParent'>
+            <div className='battleTransition' id='overlappingDiv'></div>
+            <canvas ref={canvasRef}
+                width="1024"
+                height="576"
+                {...props}></canvas>
+        </div>
     );
 }
 
