@@ -75,6 +75,11 @@ function Canvas(props) {
                     else this.frames.val = 0 //reset to the beginning of the first sprite.
                 }
             }
+            attack({ attack, recipient }) {
+                gsap.to(this.position, {
+                    x: this.position.x - 20
+                })
+            }
         }
 
         //Array for pushing our collision boundaries into.
@@ -117,7 +122,6 @@ function Canvas(props) {
                     )
             })
         })
-        console.log(battleZones)
 
         const backgroundImage = new Image()
         backgroundImage.src = require('../img/PelletTown.png')
@@ -300,7 +304,6 @@ function Canvas(props) {
                             }
                         }
                     })) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -325,7 +328,6 @@ function Canvas(props) {
                         }
                     })
                     ) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -349,7 +351,6 @@ function Canvas(props) {
                         }
                     })
                     ) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -373,7 +374,6 @@ function Canvas(props) {
                         }
                     })
                     ) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -430,6 +430,19 @@ function Canvas(props) {
         }
 
         animateBattle() //************************************Activated so I can work on this. */
+
+        document.querySelectorAll('button').forEach((button) => {
+            button.addEventListener('click', () => {
+                emby.attack({
+                    attack: {
+                        name: 'Tackle',
+                        damage: 10,
+                        type: 'Normal'
+                    },
+                    recipient: draggle
+                })
+            })
+        })
 
         //event listener for key-down presses
         let lastkey = ''
@@ -498,7 +511,7 @@ function Canvas(props) {
                 {...props}></canvas>
             <div className='battleText' >
                 <div className='attackDiv'>
-                    <button className='attackBtn'>Attack1</button>
+                    <button className='attackBtn'>Tackle</button>
                     <button className='attackBtn'>Attack2</button>
                     <button className='attackBtn'>Attack3</button>
                     <button className='attackBtn'>Attack4</button>
