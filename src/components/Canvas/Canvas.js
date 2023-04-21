@@ -209,6 +209,10 @@ function Canvas(props) {
             )
         }
 
+        const battle = {
+            initiated: false
+        }
+
         // Loop the image continously to provide animation.
         function animate() {
             window.requestAnimationFrame(animate)
@@ -225,6 +229,11 @@ function Canvas(props) {
             player.draw()
             foreground.draw()
 
+            let moving = true
+            player.moving = false
+            if (battle.initiated) return
+
+            //activate a battle
             if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
                 for (let i = 0; i < battleZones.length; i++) {
                     const battleZone = battleZones[i]
@@ -240,7 +249,8 @@ function Canvas(props) {
                         overlappingArea > player.width * player.height / 2 //If 1/2 of the sprite is in the battle zone, it is colliding
                         && Math.random() < 0.01
                     ) {
-                        console.log('Battlezone collision')
+                        console.log('activate battle')
+                        battle.initiated = true
                         break
                     }
                 }
@@ -248,8 +258,8 @@ function Canvas(props) {
 
             //If any of the associated keys are pressed moved the background position by 3 pixels each 'tick' and detecting for boundary
             //collision
-            let moving = true
-            player.moving = false
+            // let moving = true
+            // player.moving = false
             if (keys.w.pressed && lastkey === 'w') {
                 player.moving = true
                 player.image = player.sprites.up
