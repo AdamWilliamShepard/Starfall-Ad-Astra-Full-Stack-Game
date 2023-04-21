@@ -133,3 +133,21 @@ Container Styles
   align-items: center;
 }
 
+/* --------------------------------------------------------------------------------
+Battle Transition Styles
+-------------------------------------------------------------------------------- */
+.battleTransitionParent{
+  display: inline-block;
+  position: relative;
+}
+
+.battleTransition {
+  background-color: black;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+}

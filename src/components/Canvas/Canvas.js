@@ -405,10 +405,13 @@ function Canvas(props) {
     }, []);
 
     return (
+        <div className='battleTransitionParent'>
+            <div className='battleTransition'></div>
         <canvas ref={canvasRef}
             width="1024"
             height="576"
             {...props}></canvas>
+            </div>
     );
 }
 
