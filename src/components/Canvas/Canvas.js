@@ -376,10 +376,18 @@ function Canvas(props) {
 
         //calling the animate function
         animate()
-
-        function animateBattle(){
+        const battleBackgoundImage = new Image()
+        battleBackgoundImage.src = require('../img/battleBackground.png')
+        const battleBackground = new Sprite({
+            position: {
+                x: 0,
+                y: 0
+            },
+            image: battleBackgoundImage
+        })
+        function animateBattle() {
             window.requestAnimationFrame(animateBattle)
-            console.log('Animating Battle')
+            battleBackground.draw()
         }
 
         //event listener for key-down presses
