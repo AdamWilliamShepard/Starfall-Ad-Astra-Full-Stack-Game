@@ -151,3 +151,14 @@ Battle Transition Styles
   opacity: 0;
   pointer-events: none;
 }
+
+/* --------------------------------------------------------------------------------
+Battle System Attack Text
+-------------------------------------------------------------------------------- */
+.battleText {
+  background-color: white;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  bottom: 0;
+}

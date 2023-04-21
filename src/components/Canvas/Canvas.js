@@ -480,6 +480,7 @@ function Canvas(props) {
                 width="1024"
                 height="576"
                 {...props}></canvas>
+                <div className='battleText' ></div>
         </div>
     );
 }
