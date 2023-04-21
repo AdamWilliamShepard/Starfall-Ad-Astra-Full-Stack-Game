@@ -4,14 +4,12 @@ import { useSelector } from 'react-redux';
 
 function Canvas(props) {
     const canvasRef = useRef(null);
-    //collision is an array which comes from the package json from the collision map
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        // console.log(context)
 
         // loops through our array for each row (which is 70 wide) and push them into a new array by row.
         const collisionMap = []
@@ -23,7 +21,6 @@ function Canvas(props) {
         for (let i = 0; i < battleZoneData.length; i += 70) {
             battleZonesMap.push(battleZoneData.slice(i, 70 + i))
         }
-        // console.log(battleZonesMap)
 
         //individual boundary blocks which will create our collision map
         class Boundary {
@@ -100,7 +97,8 @@ function Canvas(props) {
                                 x: j * Boundary.width + offset.x,
                                 y: i * Boundary.height + offset.y
                             }
-                        }))
+                        })
+                    )
             })
         })
 
@@ -115,7 +113,8 @@ function Canvas(props) {
                                 x: j * Boundary.width + offset.x,
                                 y: i * Boundary.height + offset.y
                             }
-                        }))
+                        })
+                    )
             })
         })
         console.log(battleZones)
@@ -256,16 +255,17 @@ function Canvas(props) {
                             onComplete() {
                                 gsap.to('#overlappingDiv', {
                                     opacity: 1,
-                                    duration: 0.4
+                                    duration: 0.4,
+                                    onComplete() {
+                                        animateBattle()
+                                        gsap.to('#overlappingDiv', {
+                                            opacity: 0,
+                                            duration: 0.4
+                                        })
+                                    }
                                 })
-
-                                //activate a new animation loop
-                                animateBattle()
-
-
                             }
                         })
-
                         break
                     }
                 }
@@ -289,8 +289,7 @@ function Canvas(props) {
                                 y: boundary.position.y + 3
                             }
                         }
-                    })
-                    ) {
+                    })) {
                         console.log('colliding')
                         moving = false
                         break
@@ -375,7 +374,7 @@ function Canvas(props) {
         }
 
         //calling the animate function
-        animate()
+        // animate() ****************************************De-activated for the moment so I can work on the battle sequence
         const battleBackgoundImage = new Image()
         battleBackgoundImage.src = require('../img/battleBackground.png')
         const battleBackground = new Sprite({
@@ -389,6 +388,7 @@ function Canvas(props) {
             window.requestAnimationFrame(animateBattle)
             battleBackground.draw()
         }
+        animateBattle() //************************************Activated so I can work on this. */
 
         //event listener for key-down presses
         let lastkey = ''
