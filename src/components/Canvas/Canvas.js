@@ -41,7 +41,7 @@ function Canvas(props) {
         //Create a new class called sprite which we can use multiple times for various sprites.
         class Sprite {
             //constructor allows me to define the arguments that each sprite will take it when created.
-            constructor({ position, velocity, image, frames = { max: 1 }, sprites = [] }) {
+            constructor({ position, velocity, image, frames = { max: 1, hold: 10 }, sprites = [], animate = false }) {
                 this.position = position
                 this.image = image
                 this.frames = { ...frames, val: 0, elapsed: 0 }
@@ -49,7 +49,7 @@ function Canvas(props) {
                     this.width = this.image.width / this.frames.max
                     this.height = this.image.height
                 }
-                this.moving = false
+                this.animate = animate
                 this.sprites = sprites
             }
             //function to draw the image onto the screen at the associated coordinates.
@@ -65,11 +65,11 @@ function Canvas(props) {
                     this.image.width / this.frames.max, //resolution to be rendered at
                     this.image.height, //resolution to be rendered at
                 )
-                if (!this.moving) return
+                if (!this.animate) return
                 if (this.frames.max > 1) { //If we have a sprite-sheet with more than 1 frame
                     this.frames.elapsed++ //incremement frames elapsed
                 }
-                if (this.frames.elapsed % 10 === 0) { //if the number is divisible by 10 then call the below statement. This slows down our sprite
+                if (this.frames.elapsed % this.frames.hold === 0) { //if the number is divisible by 10 then call the below statement. This slows down our sprite
                     //so they do not appear to be running.
                     if (this.frames.val < this.frames.max - 1) this.frames.val++ // increment each time we draw the frame.
                     else this.frames.val = 0 //reset to the beginning of the first sprite.
@@ -137,6 +137,15 @@ function Canvas(props) {
         const playerRightImage = new Image()
         playerRightImage.src = require('../img/playerRight.png')
 
+        const battleBackgoundImage = new Image()
+        battleBackgoundImage.src = require('../img/battleBackground.png')
+
+        const draggleImage = new Image()
+        draggleImage.src = require('../img/draggleSprite.png')
+
+        const embyImage = new Image()
+        embyImage.src = require('../img/embySprite.png')
+
         //sprite for the player.
         const player = new Sprite({
             position: {
@@ -145,7 +154,8 @@ function Canvas(props) {
             },
             image: playerDownImage,
             frames: {
-                max: 4
+                max: 4,
+                hold: 10
             },
             sprites: {
                 up: playerUpImage,
@@ -223,7 +233,7 @@ function Canvas(props) {
             foreground.draw()
 
             let moving = true
-            player.moving = false
+            player.animate = false
 
             if (battle.initiated) return
 
@@ -276,7 +286,7 @@ function Canvas(props) {
             // let moving = true
             // player.moving = false
             if (keys.w.pressed && lastkey === 'w') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.up
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -300,7 +310,7 @@ function Canvas(props) {
                     moveables.forEach(movable => { movable.position.y += 3 })
             }
             else if (keys.a.pressed && lastkey === 'a') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.left
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -324,7 +334,7 @@ function Canvas(props) {
                     moveables.forEach(movable => { movable.position.x += 3 })
             }
             else if (keys.s.pressed && lastkey === 's') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.down
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -348,7 +358,7 @@ function Canvas(props) {
                     moveables.forEach(movable => { movable.position.y -= 3 })
             }
             else if (keys.d.pressed && lastkey === 'd') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.right
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -375,8 +385,7 @@ function Canvas(props) {
 
         //calling the animate function
         // animate() ****************************************De-activated for the moment so I can work on the battle sequence
-        const battleBackgoundImage = new Image()
-        battleBackgoundImage.src = require('../img/battleBackground.png')
+
         const battleBackground = new Sprite({
             position: {
                 x: 0,
@@ -384,10 +393,42 @@ function Canvas(props) {
             },
             image: battleBackgoundImage
         })
+
+        //enemy battle combatant
+        const draggle = new Sprite({
+            position: {
+                x: 800,
+                y: 100
+            },
+            image: draggleImage,
+            frames: {
+                max: 4,
+                hold: 30
+            },
+            animate: true
+        })
+
+        //player battle combatant
+        const emby = new Sprite({
+            position: {
+                x: 280,
+                y: 350
+            },
+            image: embyImage,
+            frames: {
+                max: 4,
+                hold: 30
+            },
+            animate: true
+        })
+
         function animateBattle() {
             window.requestAnimationFrame(animateBattle)
             battleBackground.draw()
+            draggle.draw()
+            emby.draw()
         }
+
         animateBattle() //************************************Activated so I can work on this. */
 
         //event listener for key-down presses
