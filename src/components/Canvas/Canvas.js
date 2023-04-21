@@ -6,17 +6,14 @@ function Canvas(props) {
     const canvasRef = useRef(null);
     //collision is an array which comes from the package json from the collision map
     const collision = useSelector(store => store.collisionReducer)
-    // console.log(collision)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
-    // console.log(battlezone)
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         // console.log(context)
 
-        // loops through our array for each row (which is 70 wide) and push
-        //them into a new array by row.
+        // loops through our array for each row (which is 70 wide) and push them into a new array by row.
         const collisionMap = []
         for (let i = 0; i < collision.length; i += 70) {
             collisionMap.push(collision.slice(i, 70 + i))
@@ -123,15 +120,12 @@ function Canvas(props) {
         })
         console.log(battleZones)
 
-        //Our background image
-        const image = new Image()
-        image.src = require('../img/PelletTown.png')
+        const backgroundImage = new Image()
+        backgroundImage.src = require('../img/PelletTown.png')
 
-        //Our foreground image
         const foregroundImage = new Image()
         foregroundImage.src = require('../img/foregroundObjects.png')
 
-        //Our player image
         const playerDownImage = new Image()
         playerDownImage.src = require('../img/playerDown.png')
 
@@ -168,7 +162,7 @@ function Canvas(props) {
                 x: offset.x,
                 y: offset.y
             },
-            image: image
+            image: backgroundImage
         })
 
         //Create a new sprite called foreground using the image and at the given coords.
@@ -215,7 +209,7 @@ function Canvas(props) {
 
         // Loop the image continously to provide animation.
         function animate() {
-            window.requestAnimationFrame(animate)
+            const animationId = window.requestAnimationFrame(animate)
 
             //The background image to be displayed, the x coord and the y coord
             background.draw()
@@ -231,6 +225,8 @@ function Canvas(props) {
 
             let moving = true
             player.moving = false
+
+            console.log(animationId)
             if (battle.initiated) return
 
             //activate a battle
@@ -250,7 +246,26 @@ function Canvas(props) {
                         && Math.random() < 0.01
                     ) {
                         console.log('activate battle')
+                        //deactivate current activation loop
+                        window.cancelAnimationFrame(animationId)
                         battle.initiated = true
+                        gsap.to('#overlappingDiv', {
+                            opacity: 1,
+                            repeat: 3,
+                            yoyo: true,
+                            duration: 0.4,
+                            // onComplete() {
+                            //     generatePath.to('#overlappingDiv', {
+                            //         opacity: 1,
+                            //         duration: 0.4
+                            //     })
+
+                            //     //activate a new animation loop
+
+
+                            // }
+                        })
+
                         break
                     }
                 }
@@ -406,12 +421,12 @@ function Canvas(props) {
 
     return (
         <div className='battleTransitionParent'>
-            <div className='battleTransition'></div>
-        <canvas ref={canvasRef}
-            width="1024"
-            height="576"
-            {...props}></canvas>
-            </div>
+            <div className='battleTransition' id='overlappingDiv'></div>
+            <canvas ref={canvasRef}
+                width="1024"
+                height="576"
+                {...props}></canvas>
+        </div>
     );
 }
 
