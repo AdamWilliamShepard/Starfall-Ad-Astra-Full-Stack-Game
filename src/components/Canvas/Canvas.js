@@ -476,6 +476,22 @@ function Canvas(props) {
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
+            <div className='nameCardEnemy'>
+                <h1 className='nameBar'>Draggle</h1>
+                <div style={{ position: 'relative' }}>
+                    <div className='healthBarEmpty'></div>
+                    <div className='healthBar'></div>
+                </div>
+            </div>
+
+            <div className='nameCardHero'>
+                <h1 className='nameBar'>Emby</h1>
+                <div style={{ position: 'relative' }}>
+                    <div className='healthBarEmpty'></div>
+                    <div className='healthBar'></div>
+                </div>
+            </div>
+
             <canvas ref={canvasRef}
                 width="1024"
                 height="576"
