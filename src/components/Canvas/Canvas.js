@@ -226,7 +226,6 @@ function Canvas(props) {
             let moving = true
             player.moving = false
 
-            console.log(animationId)
             if (battle.initiated) return
 
             //activate a battle
@@ -247,23 +246,24 @@ function Canvas(props) {
                     ) {
                         console.log('activate battle')
                         //deactivate current activation loop
-                        window.cancelAnimationFrame(animationId)
+                        // window.cancelAnimationFrame(animationId)
                         battle.initiated = true
                         gsap.to('#overlappingDiv', {
                             opacity: 1,
                             repeat: 3,
                             yoyo: true,
                             duration: 0.4,
-                            // onComplete() {
-                            //     generatePath.to('#overlappingDiv', {
-                            //         opacity: 1,
-                            //         duration: 0.4
-                            //     })
+                            onComplete() {
+                                gsap.to('#overlappingDiv', {
+                                    opacity: 1,
+                                    duration: 0.4
+                                })
 
-                            //     //activate a new animation loop
+                                //activate a new animation loop
+                                animateBattle()
 
 
-                            // }
+                            }
                         })
 
                         break
@@ -376,6 +376,11 @@ function Canvas(props) {
 
         //calling the animate function
         animate()
+
+        function animateBattle(){
+            window.requestAnimationFrame(animateBattle)
+            console.log('Animating Battle')
+        }
 
         //event listener for key-down presses
         let lastkey = ''
