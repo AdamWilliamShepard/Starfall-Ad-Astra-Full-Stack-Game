@@ -480,7 +480,17 @@ function Canvas(props) {
                 width="1024"
                 height="576"
                 {...props}></canvas>
-                <div className='battleText' ></div>
+            <div className='battleText' >
+                <div className='attackDiv'>
+                    <button className='attackBtn'>Attack1</button>
+                    <button className='attackBtn'>Attack2</button>
+                    <button className='attackBtn'>Attack3</button>
+                    <button className='attackBtn'>Attack4</button>
+                </div>
+                <div className='attackTypeDiv'>
+                    <h3 className='battleFont'>Attack Type</h3>
+                </div>
+            </div>
         </div>
     );
 }

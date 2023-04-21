@@ -139,6 +139,7 @@ Battle Transition Styles
 .battleTransitionParent{
   display: inline-block;
   position: relative;
+
 }
 
 .battleTransition {
@@ -157,8 +158,43 @@ Battle System Attack Text
 -------------------------------------------------------------------------------- */
 .battleText {
   background-color: white;
-  width: 200px;
-  height: 200px;
+  height: 120px;
   position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.8;
+  border-top: 4px black solid;
+  display: flex;
+}
+
+.battleFont {
+  color: black;
+  margin: 0;
+  font-family: 'Press Start 2P';
+}
+
+.attackDiv {
+  width: 66.66%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.attackTypeDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 33.33%;
+  border-left: 4px solid black;
+}
+
+.attackBtn {
+  margin: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P';
+}
+
+.attackBtn:hover {
+background-image: linear-gradient(rgb(98, 165, 217), rgb(223, 78, 78));
+transform: scale(1.02);
 }
