@@ -7,6 +7,8 @@ function Canvas(props) {
     //collision is an array which comes from the package json from the collision map
     const collision = useSelector(store => store.collisionReducer)
     // console.log(collision)
+    const battleZoneData = useSelector(store => store.battleZonesReducer)
+    // console.log(battlezone)
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -20,6 +22,12 @@ function Canvas(props) {
             collisionMap.push(collision.slice(i, 70 + i))
         }
 
+        const battleZonesMap = []
+        for (let i = 0; i < battleZoneData.length; i += 70) {
+            battleZonesMap.push(battleZoneData.slice(i, 70 + i))
+        }
+        // console.log(battleZonesMap)
+
         //individual boundary blocks which will create our collision map
         class Boundary {
             static width = 48
@@ -31,7 +39,7 @@ function Canvas(props) {
             }
             //drawing our boundary blocks as red/transparent and filling them based on coords and height/width
             draw() {
-                context.fillStyle = "rgba(255, 0, 0, 0.0)"
+                context.fillStyle = "rgba(255, 0, 0, 0.5)"
                 context.fillRect(this.position.x, this.position.y, this.width, this.height)
             }
         }
@@ -39,7 +47,7 @@ function Canvas(props) {
         //Create a new class called sprite which we can use multiple times for various sprites.
         class Sprite {
             //constructor allows me to define the arguments that each sprite will take it when created.
-            constructor({ position, velocity, image, frames = { max: 1 }, sprites=[] }) {
+            constructor({ position, velocity, image, frames = { max: 1 }, sprites = [] }) {
                 this.position = position
                 this.image = image
                 this.frames = { ...frames, val: 0, elapsed: 0 }
@@ -98,6 +106,22 @@ function Canvas(props) {
                         }))
             })
         })
+
+        const battleZones = []
+
+        battleZonesMap.forEach((row, i) => {
+            row.forEach((symbol, j) => {
+                if (symbol === 1025)
+                    battleZones.push(
+                        new Boundary({
+                            position: {
+                                x: j * Boundary.width + offset.x,
+                                y: i * Boundary.height + offset.y
+                            }
+                        }))
+            })
+        })
+        console.log(battleZones)
 
         //Our background image
         const image = new Image()
@@ -173,7 +197,7 @@ function Canvas(props) {
         }
 
         //Constant for items that will move along with the background.
-        const moveables = [background, ...boundaries, foreground]
+        const moveables = [background, ...boundaries, foreground, ...battleZones]
 
         //collision detection. rectangle1 is the player, rectangle2 is another object.
         function rectangularCollision({ rectangle1, rectangle2 }) {
@@ -195,8 +219,32 @@ function Canvas(props) {
                 Boundary.draw()
                 //collision detection between the player and a boundary.
             })
+            battleZones.forEach(battleZone => {
+                battleZone.draw()
+            })
             player.draw()
             foreground.draw()
+
+            if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+                for (let i = 0; i < battleZones.length; i++) {
+                    const battleZone = battleZones[i]
+                    const overlappingArea = (Math.min(player.position.x + player.width, battleZone.position.x + battleZone.width)
+                        - Math.max(player.position.x, battleZone.position.x))
+                        * (Math.min(player.position.y + player.height, battleZone.position.y + battleZone.height)
+                            - Math.max(player.position.y, battleZone.position.y))
+
+                    if (rectangularCollision({
+                        rectangle1: player,
+                        rectangle2: battleZone
+                    }) &&
+                        overlappingArea > player.width * player.height / 2 //If 1/2 of the sprite is in the battle zone, it is colliding
+                        && Math.random() < 0.01
+                    ) {
+                        console.log('Battlezone collision')
+                        break
+                    }
+                }
+            }
 
             //If any of the associated keys are pressed moved the background position by 3 pixels each 'tick' and detecting for boundary
             //collision
@@ -223,12 +271,13 @@ function Canvas(props) {
                         break
                     }
                 }
+
                 if (moving)
                     moveables.forEach(movable => { movable.position.y += 3 })
             }
             else if (keys.a.pressed && lastkey === 'a') {
                 player.moving = true
-                player.image = player.sprites.left 
+                player.image = player.sprites.left
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
                     if (rectangularCollision({
