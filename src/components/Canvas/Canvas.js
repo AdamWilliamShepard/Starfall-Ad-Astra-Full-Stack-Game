@@ -41,7 +41,7 @@ function Canvas(props) {
         //Create a new class called sprite which we can use multiple times for various sprites.
         class Sprite {
             //constructor allows me to define the arguments that each sprite will take it when created.
-            constructor({ position, velocity, image, frames = { max: 1, hold: 10 }, sprites = [], animate = false }) {
+            constructor({ position, velocity, image, frames = { max: 1, hold: 10 }, sprites = [], animate = false, isEnemy = false }) {
                 this.position = position
                 this.image = image
                 this.frames = { ...frames, val: 0, elapsed: 0 }
@@ -51,9 +51,14 @@ function Canvas(props) {
                 }
                 this.animate = animate
                 this.sprites = sprites
+                this.opacity = 1
+                this.health = 100 // this can be scaled up by passing in additional arguments later
+                this.isEnemy = isEnemy
             }
             //function to draw the image onto the screen at the associated coordinates.
             draw() {
+                context.save() // when using a global canvas property it will only affect the items between save and restore
+                context.globalAlpha = this.opacity
                 context.drawImage(
                     this.image,
                     this.frames.val * this.width, //starting x coord of crop which will change as the player moves
@@ -65,6 +70,8 @@ function Canvas(props) {
                     this.image.width / this.frames.max, //resolution to be rendered at
                     this.image.height, //resolution to be rendered at
                 )
+                context.restore()
+
                 if (!this.animate) return
                 if (this.frames.max > 1) { //If we have a sprite-sheet with more than 1 frame
                     this.frames.elapsed++ //incremement frames elapsed
@@ -76,8 +83,38 @@ function Canvas(props) {
                 }
             }
             attack({ attack, recipient }) {
-                gsap.to(this.position, {
-                    x: this.position.x - 20
+                const tl = gsap.timeline()
+
+                let movementDistance = 20
+                if (this.isEnemy) movementDistance -20
+
+                tl.to(this.position, {
+                    x: this.position.x - movementDistance
+                }).to(this.position, {
+                    x: this.position.x + movementDistance * 2,
+                    duration: 0.1,
+                    onComplete: () => {
+                        //enemy actually gets hit
+                        gsap.to('#enemyHealthBar', {
+                            width: this.health - attack.damage + '%'
+                        })
+
+                        gsap.to(recipient.position, {
+                            x: recipient.position.x + 10,
+                            yoyo: true,
+                            repeat: 5,
+                            duration: 0.08,
+                        })
+
+                        gsap.to(recipient, {
+                            opacity: 0,
+                            repeat: 5,
+                            yoyo: true,
+                            duration: 0.08
+                        })
+                    }
+                }).to(this.position, {
+                    x: this.position.x
                 })
             }
         }
@@ -405,7 +442,8 @@ function Canvas(props) {
                 max: 4,
                 hold: 30
             },
-            animate: true
+            animate: true,
+            isEnemy: true
         })
 
         //player battle combatant
@@ -433,13 +471,13 @@ function Canvas(props) {
 
         document.querySelectorAll('button').forEach((button) => {
             button.addEventListener('click', () => {
-                emby.attack({
+                draggle.attack({
                     attack: {
                         name: 'Tackle',
                         damage: 10,
                         type: 'Normal'
                     },
-                    recipient: draggle
+                    recipient: emby
                 })
             })
         })
@@ -493,7 +531,7 @@ function Canvas(props) {
                 <h1 className='nameBar'>Draggle</h1>
                 <div style={{ position: 'relative' }}>
                     <div className='healthBarEmpty'></div>
-                    <div className='healthBar'></div>
+                    <div className='healthBar' id="enemyHealthBar"></div>
                 </div>
             </div>
 
