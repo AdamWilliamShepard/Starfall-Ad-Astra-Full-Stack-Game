@@ -194,7 +194,7 @@ Battle System Attack Text
 
 .attackBtn:hover {
   background-image: linear-gradient(rgb(98, 165, 217), rgb(223, 78, 78));
-  transform: scale(1.02);
+  /* transform: scale(1.02); */
 }
 
 /* --------------------------------------------------------------------------------
@@ -256,4 +256,9 @@ Battle System dialogue
   font-family: "Press Start 2P";
   font-size: 16px;
   color: black;
+  cursor: pointer;
+}
+
+.battleDialogue:hover {
+  background-color: lightblue;
 }

@@ -259,14 +259,11 @@ function Canvas(props) {
         const playerRightImage = new Image()
         playerRightImage.src = require('../img/playerRight.png')
 
-        const battleBackgoundImage = new Image()
-        battleBackgoundImage.src = require('../img/battleBackground.png')
 
-        const draggleImage = new Image()
-        draggleImage.src = require('../img/draggleSprite.png')
 
-        const embyImage = new Image()
-        embyImage.src = require('../img/embySprite.png')
+
+
+
 
         const player = new Sprite({
             position: {
@@ -503,6 +500,8 @@ function Canvas(props) {
         //calling the animate function
         // animate() ****************************************De-activated for the moment so I can work on the battle sequence
 
+        const battleBackgoundImage = new Image()
+        battleBackgoundImage.src = require('../img/battleBackground.png')
         const battleBackground = new Sprite({
             position: {
                 x: 0,
@@ -512,6 +511,8 @@ function Canvas(props) {
         })
 
         //enemy battle combatant
+        const draggleImage = new Image()
+        draggleImage.src = require('../img/draggleSprite.png')
         const draggle = new Sprite({
             position: {
                 x: 800,
@@ -528,6 +529,8 @@ function Canvas(props) {
         })
 
         //player battle combatant
+        const embyImage = new Image()
+        embyImage.src = require('../img/embySprite.png')
         const emby = new Sprite({
             position: {
                 x: 280,
@@ -553,6 +556,9 @@ function Canvas(props) {
 
         animateBattle() //************************************Activated so I can work on this. */
 
+        //queue for enemy attacks
+        const queue = []
+
         //Event listeners for our attack buttons
         document.querySelectorAll('button').forEach((button) => {
             button.addEventListener('click', (event) => {
@@ -564,7 +570,31 @@ function Canvas(props) {
                     recipient: draggle,
                     renderedSprites
                 })
+
+                queue.push(() => {
+                    draggle.attack({
+                        attack: attacks.Tackle,
+                        recipient: emby,
+                        renderedSprites
+                    })
+                })
+
+                queue.push(() => {
+                    draggle.attack({
+                        attack: attacks.Fireball,
+                        recipient: emby,
+                        renderedSprites
+                    })
+                })
             })
+        })
+
+        document.querySelector('#dialogueBox').addEventListener('click', (event) => {
+            if (queue.length > 0){
+                queue[0]()
+                queue.shift()
+            } else
+            event.currentTarget.style.display= 'none'
         })
 
         //event listener for key-down presses
@@ -633,7 +663,7 @@ function Canvas(props) {
                 height="576"
                 {...props}></canvas>
             <div className='battleText' >
-                <div className='battleDialogue' id='dialogueBox' style={{display: 'none'}}> testing test</div>
+                <div className='battleDialogue' id='dialogueBox' style={{ display: 'none' }}> testing test</div>
                 <div className='attackDiv'>
                     <button className='attackBtn'>Tackle</button>
                     <button className='attackBtn'>Fireball</button>
