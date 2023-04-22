@@ -621,7 +621,12 @@ function Canvas(props) {
                     queue.push(() => {
                         draggle.faint()
                     })
-                    return 
+                    queue.push(() => {
+                        //fade back to black
+                        gsap.to('#overlappingDiv', {
+                            opacity: 1
+                        })
+                    }) 
                 }
                 //draggle or enemy attacks here
                 const randomAttack = draggle.attacks[Math.floor(Math.random() * draggle.attacks.length)]
