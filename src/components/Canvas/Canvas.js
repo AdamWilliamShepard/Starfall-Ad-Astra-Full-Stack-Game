@@ -129,16 +129,29 @@ function Canvas(props) {
                 this.name = name
                 this.attacks = attacks
             }
+
+            faint(){
+                document.querySelector('#dialogueBox').innerHTML = 
+                this.name + ' fainted! '
+                gsap.to(this.position, {
+                    y: this.position.y + 20
+                })
+                gsap.to(this, {
+                    opacity: 0
+                })
+            }
+
             attack({ attack, recipient, renderedSprites }) {
                 document.querySelector('#dialogueBox').style.display = 'block'
-                document.querySelector('#dialogueBox').innerHTML = this.name + ' used ' + attack.name
+                document.querySelector('#dialogueBox').innerHTML = 
+                this.name + ' used ' + attack.name
                 let healthBar = '#enemyHealthBar'
                 if (this.isEnemy) healthBar = '#playerHealthBar'
 
                 let rotation = 1
                 if (this.isEnemy) rotation = -2.2
 
-                this.health -= attack.damage
+                recipient.health -= attack.damage
 
                 switch (attack.name) {
                     case 'Fireball':
@@ -164,7 +177,7 @@ function Canvas(props) {
                             x: recipient.position.x,
                             y: recipient.position.y, onComplete: () => {
                                 gsap.to(healthBar, {
-                                    width: this.health + '%'
+                                    width: recipient.health + '%'
                                 })
 
                                 gsap.to(recipient.position, {
@@ -201,7 +214,7 @@ function Canvas(props) {
                                 //enemy actually gets hit
 
                                 gsap.to(healthBar, {
-                                    width: this.health + '%'
+                                    width: recipient.health + '%'
                                 })
 
                                 gsap.to(recipient.position, {
@@ -567,7 +580,7 @@ function Canvas(props) {
             },
             animate: true,
             name: 'Emby',
-            attacks: [attacks.Tackle, attacks.Fireball ]
+            attacks: [attacks.Tackle, attacks.Fireball]
         })
         console.log(emby)
         const renderedSprites = [draggle, emby]
@@ -603,8 +616,14 @@ function Canvas(props) {
                     recipient: draggle,
                     renderedSprites
                 })
-                
-                //randomize draggles attacks
+
+                if (draggle.health <= 0) {
+                    queue.push(() => {
+                        draggle.faint()
+                    })
+                    return 
+                }
+                //draggle or enemy attacks here
                 const randomAttack = draggle.attacks[Math.floor(Math.random() * draggle.attacks.length)]
 
                 queue.push(() => {
@@ -613,10 +632,15 @@ function Canvas(props) {
                         recipient: emby,
                         renderedSprites
                     })
+                    if (emby.health <= 0) {
+                        queue.push(() => {
+                            emby.faint()
+                        })
+                        return 
+                    }
                 })
             })
             button.addEventListener('mouseenter', (event) => {
-                console.log('go')
                 const selectedAttack = attacks[event.currentTarget.innerHTML]
                 document.querySelector('#attackType').innerHTML = selectedAttack.type
                 document.querySelector('#attackType').style.color = selectedAttack.color
