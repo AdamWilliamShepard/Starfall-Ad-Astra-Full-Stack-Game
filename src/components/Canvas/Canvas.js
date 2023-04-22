@@ -615,6 +615,12 @@ function Canvas(props) {
                     })
                 })
             })
+            button.addEventListener('mouseenter', (event) => {
+                console.log('go')
+                const selectedAttack = attacks[event.currentTarget.innerHTML]
+                document.querySelector('#attackType').innerHTML = selectedAttack.type
+                document.querySelector('#attackType').style.color = selectedAttack.color
+            })
         })
 
         document.querySelector('#dialogueBox').addEventListener('click', (event) => {
@@ -699,7 +705,7 @@ function Canvas(props) {
                     <button className='attackBtn'>Attack4</button> */}
                 </div>
                 <div className='attackTypeDiv'>
-                    <h3 className='battleFont'>Attack Type</h3>
+                    <h3 className='battleFont' id="attackType">Attack Type</h3>
                 </div>
             </div>
         </div>
