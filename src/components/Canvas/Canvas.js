@@ -7,6 +7,7 @@ function Canvas(props) {
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
+    const monsters = useSelector(store => store.monstersReducer) //This is not fully functional yet.
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -42,15 +43,14 @@ function Canvas(props) {
         //Create a new class called sprite which we can use multiple times for various sprites.
         class Sprite {
             //constructor allows me to define the arguments that each sprite will take it when created.
-            constructor({ position,
+            constructor({
+                position,
                 velocity,
                 image,
                 frames = { max: 1, hold: 10 },
                 sprites = [],
                 animate = false,
-                isEnemy = false,
                 rotation = 0,
-                name
             }) {
                 this.position = position
                 this.image = image
@@ -62,10 +62,8 @@ function Canvas(props) {
                 this.animate = animate
                 this.sprites = sprites
                 this.opacity = 1
-                this.health = 100 // this can be scaled up by passing in additional arguments later
-                this.isEnemy = isEnemy
                 this.rotation = rotation
-                this.name = name
+
             }
             //function to draw the image onto the screen at the associated coordinates.
             draw() {
@@ -100,6 +98,36 @@ function Canvas(props) {
                     if (this.frames.val < this.frames.max - 1) this.frames.val++ // increment each time we draw the frame.
                     else this.frames.val = 0 //reset to the beginning of the first sprite.
                 }
+            }
+
+        }
+
+        class Monster extends Sprite {
+            constructor({
+                position,
+                velocity,
+                image,
+                frames = { max: 1, hold: 10 },
+                sprites = [],
+                animate = false,
+                rotation = 0,
+                isEnemy = false,
+                name,
+                attacks
+            }) {
+                super({
+                    position,
+                    velocity,
+                    image,
+                    frames,
+                    sprites,
+                    animate,
+                    rotation
+                })
+                this.health = 100 // this can be scaled up by passing in additional arguments later
+                this.isEnemy = isEnemy
+                this.name = name
+                this.attacks = attacks
             }
             attack({ attack, recipient, renderedSprites }) {
                 document.querySelector('#dialogueBox').style.display = 'block'
@@ -198,6 +226,7 @@ function Canvas(props) {
                 }
 
             }
+
         }
 
         //Array for pushing our collision boundaries into.
@@ -258,12 +287,6 @@ function Canvas(props) {
 
         const playerRightImage = new Image()
         playerRightImage.src = require('../img/playerRight.png')
-
-
-
-
-
-
 
         const player = new Sprite({
             position: {
@@ -513,7 +536,7 @@ function Canvas(props) {
         //enemy battle combatant
         const draggleImage = new Image()
         draggleImage.src = require('../img/draggleSprite.png')
-        const draggle = new Sprite({
+        const draggle = new Monster({
             position: {
                 x: 800,
                 y: 100
@@ -525,13 +548,14 @@ function Canvas(props) {
             },
             animate: true,
             isEnemy: true,
-            name: 'Draggle'
+            name: 'Draggle',
+            attacks: [attacks.Tackle]
         })
 
         //player battle combatant
         const embyImage = new Image()
         embyImage.src = require('../img/embySprite.png')
-        const emby = new Sprite({
+        const emby = new Monster({
             position: {
                 x: 280,
                 y: 350
@@ -542,9 +566,18 @@ function Canvas(props) {
                 hold: 30
             },
             animate: true,
-            name: 'Emby'
+            name: 'Emby',
+            attacks: [attacks.Tackle, attacks.Fireball ]
         })
+        console.log(emby)
         const renderedSprites = [draggle, emby]
+
+        emby.attacks.forEach(attack => {
+            const button = document.createElement('button')
+            button.innerHTML = attack.name
+            document.querySelector('#attacksBox').append(button)
+        })
+
         function animateBattle() {
             window.requestAnimationFrame(animateBattle)
             battleBackground.draw()
@@ -590,11 +623,11 @@ function Canvas(props) {
         })
 
         document.querySelector('#dialogueBox').addEventListener('click', (event) => {
-            if (queue.length > 0){
+            if (queue.length > 0) {
                 queue[0]()
                 queue.shift()
             } else
-            event.currentTarget.style.display= 'none'
+                event.currentTarget.style.display = 'none'
         })
 
         //event listener for key-down presses
@@ -664,11 +697,11 @@ function Canvas(props) {
                 {...props}></canvas>
             <div className='battleText' >
                 <div className='battleDialogue' id='dialogueBox' style={{ display: 'none' }}> testing test</div>
-                <div className='attackDiv'>
-                    <button className='attackBtn'>Tackle</button>
+                <div className='attackDiv' id="attacksBox">
+                    {/* <button className='attackBtn'>Tackle</button>
                     <button className='attackBtn'>Fireball</button>
                     <button className='attackBtn'>Attack3</button>
-                    <button className='attackBtn'>Attack4</button>
+                    <button className='attackBtn'>Attack4</button> */}
                 </div>
                 <div className='attackTypeDiv'>
                     <h3 className='battleFont'>Attack Type</h3>
