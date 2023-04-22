@@ -10,6 +10,7 @@ import savePositionReducer from './saveposition.reducer';
 import heroStatsReducer from './herostats.reducer';
 import editInfo from './editinfo.reducer';
 import battleZonesReducer from './battlezone.reducer';
+import attacksReducer from './attacks.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   heroStatsReducer,
   editInfo,
   battleZonesReducer,
+  attacksReducer
 });
 
 export default rootReducer;
