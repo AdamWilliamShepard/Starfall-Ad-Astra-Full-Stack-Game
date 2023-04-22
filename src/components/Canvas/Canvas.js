@@ -6,6 +6,8 @@ function Canvas(props) {
     const canvasRef = useRef(null);
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
+    const attacks = useSelector(store => store.attacksReducer)
+    const monsters = useSelector(store => store.monstersReducer) //This is not fully functional yet.
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -41,19 +43,40 @@ function Canvas(props) {
         //Create a new class called sprite which we can use multiple times for various sprites.
         class Sprite {
             //constructor allows me to define the arguments that each sprite will take it when created.
-            constructor({ position, velocity, image, frames = { max: 1 }, sprites = [] }) {
+            constructor({
+                position,
+                velocity,
+                image,
+                frames = { max: 1, hold: 10 },
+                sprites = [],
+                animate = false,
+                rotation = 0,
+            }) {
                 this.position = position
-                this.image = image
+                this.image = new Image()
                 this.frames = { ...frames, val: 0, elapsed: 0 }
                 this.image.onload = () => {
                     this.width = this.image.width / this.frames.max
                     this.height = this.image.height
                 }
-                this.moving = false
+                this.image.src = image.src
+                this.animate = animate
                 this.sprites = sprites
+                this.opacity = 1
+                this.rotation = rotation
+
             }
             //function to draw the image onto the screen at the associated coordinates.
             draw() {
+                context.save() // when using a global canvas property it will only affect the items between save and restore
+                context.translate(
+                    this.position.x + this.width / 2,
+                    this.position.y + this.height / 2) // moves the translation rotation point to the center of the sprite rather than the default top left corner
+                context.rotate(this.rotation)
+                context.translate(
+                    -this.position.x - this.width / 2,
+                    -this.position.y - this.height / 2)
+                context.globalAlpha = this.opacity
                 context.drawImage(
                     this.image,
                     this.frames.val * this.width, //starting x coord of crop which will change as the player moves
@@ -65,16 +88,159 @@ function Canvas(props) {
                     this.image.width / this.frames.max, //resolution to be rendered at
                     this.image.height, //resolution to be rendered at
                 )
-                if (!this.moving) return
+                context.restore()
+
+                if (!this.animate) return
                 if (this.frames.max > 1) { //If we have a sprite-sheet with more than 1 frame
                     this.frames.elapsed++ //incremement frames elapsed
                 }
-                if (this.frames.elapsed % 10 === 0) { //if the number is divisible by 10 then call the below statement. This slows down our sprite
+                if (this.frames.elapsed % this.frames.hold === 0) { //if the number is divisible by 10 then call the below statement. This slows down our sprite
                     //so they do not appear to be running.
                     if (this.frames.val < this.frames.max - 1) this.frames.val++ // increment each time we draw the frame.
                     else this.frames.val = 0 //reset to the beginning of the first sprite.
                 }
             }
+
+        }
+
+        class Monster extends Sprite {
+            constructor({
+                position,
+                velocity,
+                image,
+                frames = { max: 1, hold: 10 },
+                sprites = [],
+                animate = false,
+                rotation = 0,
+                isEnemy = false,
+                name,
+                attacks
+            }) {
+                super({
+                    position,
+                    velocity,
+                    image,
+                    frames,
+                    sprites,
+                    animate,
+                    rotation
+                })
+                this.health = 100 // this can be scaled up by passing in additional arguments later
+                this.isEnemy = isEnemy
+                this.name = name
+                this.attacks = attacks
+            }
+
+            faint() {
+                document.querySelector('#dialogueBox').innerHTML =
+                    this.name + ' fainted! '
+                gsap.to(this.position, {
+                    y: this.position.y + 20
+                })
+                gsap.to(this, {
+                    opacity: 0
+                })
+            }
+
+            attack({ attack, recipient, renderedSprites }) {
+                document.querySelector('#dialogueBox').style.display = 'block'
+                document.querySelector('#dialogueBox').innerHTML =
+                    this.name + ' used ' + attack.name
+                let healthBar = '#enemyHealthBar'
+                if (this.isEnemy) healthBar = '#playerHealthBar'
+
+                let rotation = 1
+                if (this.isEnemy) rotation = -2.2
+
+                recipient.health -= attack.damage
+
+                switch (attack.name) {
+                    case 'Fireball':
+                        const fireballImage = new Image()
+                        fireballImage.src = require('../img/fireball.png')
+                        const fireball = new Sprite({
+                            position: {
+                                x: this.position.x,
+                                y: this.position.y
+                            },
+                            image: fireballImage,
+                            frames: {
+                                max: 4,
+                                hold: 10
+                            },
+                            animate: true,
+                            rotation
+                        })
+
+                        renderedSprites.splice(1, 0, fireball)
+
+                        gsap.to(fireball.position, {
+                            x: recipient.position.x,
+                            y: recipient.position.y, onComplete: () => {
+                                gsap.to(healthBar, {
+                                    width: recipient.health + '%'
+                                })
+
+                                gsap.to(recipient.position, {
+                                    x: recipient.position.x + 10,
+                                    yoyo: true,
+                                    repeat: 5,
+                                    duration: 0.08,
+                                })
+
+                                gsap.to(recipient, {
+                                    opacity: 0,
+                                    repeat: 5,
+                                    yoyo: true,
+                                    duration: 0.08
+                                })
+                                renderedSprites.splice(1, 1)
+                            }
+                        })
+
+                        break
+
+                    case 'Tackle':
+                        const tl = gsap.timeline()
+
+                        let movementDistance = 20
+                        if (this.isEnemy) movementDistance = -20
+
+                        tl.to(this.position, {
+                            x: this.position.x - movementDistance
+                        }).to(this.position, {
+                            x: this.position.x + movementDistance * 2,
+                            duration: 0.1,
+                            onComplete: () => {
+                                //enemy actually gets hit
+
+                                gsap.to(healthBar, {
+                                    width: recipient.health + '%'
+                                })
+
+                                gsap.to(recipient.position, {
+                                    x: recipient.position.x + 10,
+                                    yoyo: true,
+                                    repeat: 5,
+                                    duration: 0.08,
+                                })
+
+                                gsap.to(recipient, {
+                                    opacity: 0,
+                                    repeat: 5,
+                                    yoyo: true,
+                                    duration: 0.08
+                                })
+                            }
+                        }).to(this.position, {
+                            x: this.position.x
+                        })
+
+                        break;
+                }
+
+            }
+
         }
 
         //Array for pushing our collision boundaries into.
@@ -117,7 +283,6 @@ function Canvas(props) {
                     )
             })
         })
-        console.log(battleZones)
 
         const backgroundImage = new Image()
         backgroundImage.src = require('../img/PelletTown.png')
@@ -137,7 +302,6 @@ function Canvas(props) {
         const playerRightImage = new Image()
         playerRightImage.src = require('../img/playerRight.png')
 
-        //sprite for the player.
         const player = new Sprite({
             position: {
                 x: canvas.width / 2 - (192 / 4) / 2, //location to be rendered at on the x coord, 192 is pixels of the sprite-sheet
@@ -145,7 +309,8 @@ function Canvas(props) {
             },
             image: playerDownImage,
             frames: {
-                max: 4
+                max: 4,
+                hold: 10
             },
             sprites: {
                 up: playerUpImage,
@@ -223,7 +388,7 @@ function Canvas(props) {
             foreground.draw()
 
             let moving = true
-            player.moving = false
+            player.animate = false
 
             if (battle.initiated) return
 
@@ -257,6 +422,7 @@ function Canvas(props) {
                                     opacity: 1,
                                     duration: 0.4,
                                     onComplete() {
+                                        initBattle()
                                         animateBattle()
                                         gsap.to('#overlappingDiv', {
                                             opacity: 0,
@@ -276,7 +442,7 @@ function Canvas(props) {
             // let moving = true
             // player.moving = false
             if (keys.w.pressed && lastkey === 'w') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.up
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -290,7 +456,6 @@ function Canvas(props) {
                             }
                         }
                     })) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -300,7 +465,7 @@ function Canvas(props) {
                     moveables.forEach(movable => { movable.position.y += 3 })
             }
             else if (keys.a.pressed && lastkey === 'a') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.left
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -315,7 +480,6 @@ function Canvas(props) {
                         }
                     })
                     ) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -324,7 +488,7 @@ function Canvas(props) {
                     moveables.forEach(movable => { movable.position.x += 3 })
             }
             else if (keys.s.pressed && lastkey === 's') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.down
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -339,7 +503,6 @@ function Canvas(props) {
                         }
                     })
                     ) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -348,7 +511,7 @@ function Canvas(props) {
                     moveables.forEach(movable => { movable.position.y -= 3 })
             }
             else if (keys.d.pressed && lastkey === 'd') {
-                player.moving = true
+                player.animate = true
                 player.image = player.sprites.right
                 for (let i = 0; i < boundaries.length; i++) {
                     const boundary = boundaries[i]
@@ -363,7 +526,6 @@ function Canvas(props) {
                         }
                     })
                     ) {
-                        console.log('colliding')
                         moving = false
                         break
                     }
@@ -374,7 +536,8 @@ function Canvas(props) {
         }
 
         //calling the animate function
-        // animate() ****************************************De-activated for the moment so I can work on the battle sequence
+        // animate()
+
         const battleBackgoundImage = new Image()
         battleBackgoundImage.src = require('../img/battleBackground.png')
         const battleBackground = new Sprite({
@@ -384,11 +547,165 @@ function Canvas(props) {
             },
             image: battleBackgoundImage
         })
-        function animateBattle() {
-            window.requestAnimationFrame(animateBattle)
-            battleBackground.draw()
+
+        //enemy battle combatant
+        const draggleImage = new Image()
+        draggleImage.src = require('../img/draggleSprite.png')
+        let draggle
+
+        //player battle combatant
+        const embyImage = new Image()
+        embyImage.src = require('../img/embySprite.png')
+
+        let emby
+        let renderedSprites
+        let battleAnimationId
+        //queue for enemy attacks
+        let queue
+
+        function initBattle() {
+            document.querySelector('#userInterface').style.display = 'block'
+            document.querySelector('#dialogueBox').style.display = 'none'
+            document.querySelector('#enemyHealthBar').style.width = '100%'
+            document.querySelector('#playerHealthBar').style.width = '100%'
+            document.querySelector('#attacksBox').replaceChildren()
+
+            draggle = new Monster({
+                position: {
+                    x: 800,
+                    y: 100
+                },
+                image: {
+                    src: require('../img/draggleSprite.png')
+                },
+                frames: {
+                    max: 4,
+                    hold: 30
+                },
+                animate: true,
+                isEnemy: true,
+                name: 'Draggle',
+                attacks: [attacks.Tackle, attacks.Fireball]
+            })
+            emby = new Monster({
+                position: {
+                    x: 280,
+                    y: 350
+                },
+                image: {
+                    src: require('../img/embySprite.png')
+                },
+                frames: {
+                    max: 4,
+                    hold: 30
+                },
+                animate: true,
+                name: 'Emby',
+                attacks: [attacks.Tackle, attacks.Fireball]
+            })
+
+            renderedSprites = [draggle, emby]
+            queue = []
+
+            emby.attacks.forEach(attack => {
+                const button = document.createElement('button')
+                button.innerHTML = attack.name
+                document.querySelector('#attacksBox').append(button)
+            })
+
+            //Event listeners for our attack buttons
+            document.querySelectorAll('button').forEach((button) => {
+                button.addEventListener('click', (event) => {
+
+                    //using a hashmap rather than a for loop to quickly target what we want
+                    const selectedAttack = attacks[event.currentTarget.innerHTML]
+                    emby.attack({
+                        attack: selectedAttack,
+                        recipient: draggle,
+                        renderedSprites
+                    })
+
+                    if (draggle.health <= 0) {
+                        queue.push(() => {
+                            draggle.faint()
+                        })
+                        queue.push(() => {
+                            //fade back to black
+                            gsap.to('#overlappingDiv', {
+                                opacity: 1,
+                                onComplete: () => {
+                                    cancelAnimationFrame(battleAnimationId)
+                                    animate()
+                                    document.querySelector('#userInterface').style.display = 'none'
+                                    gsap.to('#overlappingDiv', {
+                                        opacity: 0
+                                    })
+                                    battle.initiated = false
+                                }
+                            })
+                        })
+                    }
+                    //draggle or enemy attacks here
+                    const randomAttack = draggle.attacks[Math.floor(Math.random() * draggle.attacks.length)]
+
+                    queue.push(() => {
+                        draggle.attack({
+                            attack: randomAttack,
+                            recipient: emby,
+                            renderedSprites
+                        })
+                        if (emby.health <= 0) {
+                            queue.push(() => {
+                                emby.faint()
+                            })
+                            queue.push(() => {
+                                //fade back to black
+                                gsap.to('#overlappingDiv', {
+                                    opacity: 1,
+                                    onComplete: () => {
+                                        cancelAnimationFrame(battleAnimationId)
+                                        animate()
+                                        document.querySelector('#userInterface').style.display = 'none'
+                                        gsap.to('#overlappingDiv', {
+                                            opacity: 0
+                                        })
+                                        battle.initiated = false
+                                    }
+                                })
+                            })
+                        }
+                    })
+                })
+                button.addEventListener('mouseenter', (event) => {
+                    const selectedAttack = attacks[event.currentTarget.innerHTML]
+                    document.querySelector('#attackType').innerHTML = selectedAttack.type
+                    document.querySelector('#attackType').style.color = selectedAttack.color
+                })
+            })
+
         }
+
+        function animateBattle() {
+            battleAnimationId = window.requestAnimationFrame(animateBattle)
+            battleBackground.draw()
+            renderedSprites.forEach((sprite) => {
+                sprite.draw()
+            })
+        }
+        initBattle()
         animateBattle() //************************************Activated so I can work on this. */
+
+
+
+
+
+        document.querySelector('#dialogueBox').addEventListener('click', (event) => {
+            if (queue.length > 0) {
+                queue[0]()
+                queue.shift()
+            } else
+                event.currentTarget.style.display = 'none'
+        })
 
         //event listener for key-down presses
         let lastkey = ''
@@ -435,10 +752,37 @@ function Canvas(props) {
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
+
             <canvas ref={canvasRef}
                 width="1024"
                 height="576"
-                {...props}></canvas>
+                {...props}>
+            </canvas>
+            <div id="userInterface">
+                <div className='nameCardEnemy'>
+                    <h1 className='nameBar'>Draggle</h1>
+                    <div style={{ position: 'relative' }}>
+                        <div className='healthBarEmpty'></div>
+                        <div className='healthBar' id="enemyHealthBar"></div>
+                    </div>
+                </div>
+
+                <div className='nameCardHero'>
+                    <h1 className='nameBar'>Emby</h1>
+                    <div style={{ position: 'relative' }}>
+                        <div className='healthBarEmpty'></div>
+                        <div className='healthBar' id="playerHealthBar"></div>
+                    </div>
+                </div>
+
+                <div className='battleText' >
+                    <div className='battleDialogue' id='dialogueBox' style={{ display: 'none' }}> testing test</div>
+                    <div className='attackDiv' id="attacksBox"></div>
+                    <div className='attackTypeDiv'>
+                        <h3 className='battleFont' id="attackType">Attack Type</h3>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
