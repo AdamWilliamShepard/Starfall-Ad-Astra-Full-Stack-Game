@@ -549,7 +549,7 @@ function Canvas(props) {
             animate: true,
             isEnemy: true,
             name: 'Draggle',
-            attacks: [attacks.Tackle]
+            attacks: [attacks.Tackle, attacks.Fireball]
         })
 
         //player battle combatant
@@ -603,18 +603,13 @@ function Canvas(props) {
                     recipient: draggle,
                     renderedSprites
                 })
+                
+                //randomize draggles attacks
+                const randomAttack = draggle.attacks[Math.floor(Math.random() * draggle.attacks.length)]
 
                 queue.push(() => {
                     draggle.attack({
-                        attack: attacks.Tackle,
-                        recipient: emby,
-                        renderedSprites
-                    })
-                })
-
-                queue.push(() => {
-                    draggle.attack({
-                        attack: attacks.Fireball,
+                        attack: randomAttack,
                         recipient: emby,
                         renderedSprites
                     })
