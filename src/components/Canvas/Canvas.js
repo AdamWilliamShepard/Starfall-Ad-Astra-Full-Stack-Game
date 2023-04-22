@@ -53,12 +53,13 @@ function Canvas(props) {
                 rotation = 0,
             }) {
                 this.position = position
-                this.image = image
+                this.image = new Image()
                 this.frames = { ...frames, val: 0, elapsed: 0 }
                 this.image.onload = () => {
                     this.width = this.image.width / this.frames.max
                     this.height = this.image.height
                 }
+                this.image.src = image.src
                 this.animate = animate
                 this.sprites = sprites
                 this.opacity = 1
@@ -130,9 +131,9 @@ function Canvas(props) {
                 this.attacks = attacks
             }
 
-            faint(){
-                document.querySelector('#dialogueBox').innerHTML = 
-                this.name + ' fainted! '
+            faint() {
+                document.querySelector('#dialogueBox').innerHTML =
+                    this.name + ' fainted! '
                 gsap.to(this.position, {
                     y: this.position.y + 20
                 })
@@ -143,8 +144,8 @@ function Canvas(props) {
 
             attack({ attack, recipient, renderedSprites }) {
                 document.querySelector('#dialogueBox').style.display = 'block'
-                document.querySelector('#dialogueBox').innerHTML = 
-                this.name + ' used ' + attack.name
+                document.querySelector('#dialogueBox').innerHTML =
+                    this.name + ' used ' + attack.name
                 let healthBar = '#enemyHealthBar'
                 if (this.isEnemy) healthBar = '#playerHealthBar'
 
@@ -421,6 +422,7 @@ function Canvas(props) {
                                     opacity: 1,
                                     duration: 0.4,
                                     onComplete() {
+                                        initBattle()
                                         animateBattle()
                                         gsap.to('#overlappingDiv', {
                                             opacity: 0,
@@ -534,7 +536,7 @@ function Canvas(props) {
         }
 
         //calling the animate function
-        // animate() ****************************************De-activated for the moment so I can work on the battle sequence
+        // animate()
 
         const battleBackgoundImage = new Image()
         battleBackgoundImage.src = require('../img/battleBackground.png')
@@ -549,108 +551,153 @@ function Canvas(props) {
         //enemy battle combatant
         const draggleImage = new Image()
         draggleImage.src = require('../img/draggleSprite.png')
-        const draggle = new Monster({
-            position: {
-                x: 800,
-                y: 100
-            },
-            image: draggleImage,
-            frames: {
-                max: 4,
-                hold: 30
-            },
-            animate: true,
-            isEnemy: true,
-            name: 'Draggle',
-            attacks: [attacks.Tackle, attacks.Fireball]
-        })
+        let draggle
 
         //player battle combatant
         const embyImage = new Image()
         embyImage.src = require('../img/embySprite.png')
-        const emby = new Monster({
-            position: {
-                x: 280,
-                y: 350
-            },
-            image: embyImage,
-            frames: {
-                max: 4,
-                hold: 30
-            },
-            animate: true,
-            name: 'Emby',
-            attacks: [attacks.Tackle, attacks.Fireball]
-        })
-        console.log(emby)
-        const renderedSprites = [draggle, emby]
 
-        emby.attacks.forEach(attack => {
-            const button = document.createElement('button')
-            button.innerHTML = attack.name
-            document.querySelector('#attacksBox').append(button)
-        })
+        let emby
+        let renderedSprites
+        let battleAnimationId
+        //queue for enemy attacks
+        let queue
+
+        function initBattle() {
+            document.querySelector('#userInterface').style.display = 'block'
+            document.querySelector('#dialogueBox').style.display = 'none'
+            document.querySelector('#enemyHealthBar').style.width = '100%'
+            document.querySelector('#playerHealthBar').style.width = '100%'
+            document.querySelector('#attacksBox').replaceChildren()
+
+            draggle = new Monster({
+                position: {
+                    x: 800,
+                    y: 100
+                },
+                image: {
+                    src: require('../img/draggleSprite.png')
+                },
+                frames: {
+                    max: 4,
+                    hold: 30
+                },
+                animate: true,
+                isEnemy: true,
+                name: 'Draggle',
+                attacks: [attacks.Tackle, attacks.Fireball]
+            })
+            emby = new Monster({
+                position: {
+                    x: 280,
+                    y: 350
+                },
+                image: {
+                    src: require('../img/embySprite.png')
+                },
+                frames: {
+                    max: 4,
+                    hold: 30
+                },
+                animate: true,
+                name: 'Emby',
+                attacks: [attacks.Tackle, attacks.Fireball]
+            })
+
+            renderedSprites = [draggle, emby]
+            queue = []
+
+            emby.attacks.forEach(attack => {
+                const button = document.createElement('button')
+                button.innerHTML = attack.name
+                document.querySelector('#attacksBox').append(button)
+            })
+
+            //Event listeners for our attack buttons
+            document.querySelectorAll('button').forEach((button) => {
+                button.addEventListener('click', (event) => {
+
+                    //using a hashmap rather than a for loop to quickly target what we want
+                    const selectedAttack = attacks[event.currentTarget.innerHTML]
+                    emby.attack({
+                        attack: selectedAttack,
+                        recipient: draggle,
+                        renderedSprites
+                    })
+
+                    if (draggle.health <= 0) {
+                        queue.push(() => {
+                            draggle.faint()
+                        })
+                        queue.push(() => {
+                            //fade back to black
+                            gsap.to('#overlappingDiv', {
+                                opacity: 1,
+                                onComplete: () => {
+                                    cancelAnimationFrame(battleAnimationId)
+                                    animate()
+                                    document.querySelector('#userInterface').style.display = 'none'
+                                    gsap.to('#overlappingDiv', {
+                                        opacity: 0
+                                    })
+                                    battle.initiated = false
+                                }
+                            })
+                        })
+                    }
+                    //draggle or enemy attacks here
+                    const randomAttack = draggle.attacks[Math.floor(Math.random() * draggle.attacks.length)]
+
+                    queue.push(() => {
+                        draggle.attack({
+                            attack: randomAttack,
+                            recipient: emby,
+                            renderedSprites
+                        })
+                        if (emby.health <= 0) {
+                            queue.push(() => {
+                                emby.faint()
+                            })
+                            queue.push(() => {
+                                //fade back to black
+                                gsap.to('#overlappingDiv', {
+                                    opacity: 1,
+                                    onComplete: () => {
+                                        cancelAnimationFrame(battleAnimationId)
+                                        animate()
+                                        document.querySelector('#userInterface').style.display = 'none'
+                                        gsap.to('#overlappingDiv', {
+                                            opacity: 0
+                                        })
+                                        battle.initiated = false
+                                    }
+                                })
+                            })
+                        }
+                    })
+                })
+                button.addEventListener('mouseenter', (event) => {
+                    const selectedAttack = attacks[event.currentTarget.innerHTML]
+                    document.querySelector('#attackType').innerHTML = selectedAttack.type
+                    document.querySelector('#attackType').style.color = selectedAttack.color
+                })
+            })
+
+        }
 
         function animateBattle() {
-            window.requestAnimationFrame(animateBattle)
+            battleAnimationId = window.requestAnimationFrame(animateBattle)
             battleBackground.draw()
-
             renderedSprites.forEach((sprite) => {
                 sprite.draw()
             })
         }
-
+        initBattle()
         animateBattle() //************************************Activated so I can work on this. */
 
-        //queue for enemy attacks
-        const queue = []
 
-        //Event listeners for our attack buttons
-        document.querySelectorAll('button').forEach((button) => {
-            button.addEventListener('click', (event) => {
 
-                //using a hashmap rather than a for loop to quickly target what we want
-                const selectedAttack = attacks[event.currentTarget.innerHTML]
-                emby.attack({
-                    attack: selectedAttack,
-                    recipient: draggle,
-                    renderedSprites
-                })
 
-                if (draggle.health <= 0) {
-                    queue.push(() => {
-                        draggle.faint()
-                    })
-                    queue.push(() => {
-                        //fade back to black
-                        gsap.to('#overlappingDiv', {
-                            opacity: 1
-                        })
-                    }) 
-                }
-                //draggle or enemy attacks here
-                const randomAttack = draggle.attacks[Math.floor(Math.random() * draggle.attacks.length)]
-
-                queue.push(() => {
-                    draggle.attack({
-                        attack: randomAttack,
-                        recipient: emby,
-                        renderedSprites
-                    })
-                    if (emby.health <= 0) {
-                        queue.push(() => {
-                            emby.faint()
-                        })
-                        return 
-                    }
-                })
-            })
-            button.addEventListener('mouseenter', (event) => {
-                const selectedAttack = attacks[event.currentTarget.innerHTML]
-                document.querySelector('#attackType').innerHTML = selectedAttack.type
-                document.querySelector('#attackType').style.color = selectedAttack.color
-            })
-        })
 
         document.querySelector('#dialogueBox').addEventListener('click', (event) => {
             if (queue.length > 0) {
@@ -705,36 +752,35 @@ function Canvas(props) {
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
-            <div className='nameCardEnemy'>
-                <h1 className='nameBar'>Draggle</h1>
-                <div style={{ position: 'relative' }}>
-                    <div className='healthBarEmpty'></div>
-                    <div className='healthBar' id="enemyHealthBar"></div>
-                </div>
-            </div>
-
-            <div className='nameCardHero'>
-                <h1 className='nameBar'>Emby</h1>
-                <div style={{ position: 'relative' }}>
-                    <div className='healthBarEmpty'></div>
-                    <div className='healthBar' id="playerHealthBar"></div>
-                </div>
-            </div>
 
             <canvas ref={canvasRef}
                 width="1024"
                 height="576"
-                {...props}></canvas>
-            <div className='battleText' >
-                <div className='battleDialogue' id='dialogueBox' style={{ display: 'none' }}> testing test</div>
-                <div className='attackDiv' id="attacksBox">
-                    {/* <button className='attackBtn'>Tackle</button>
-                    <button className='attackBtn'>Fireball</button>
-                    <button className='attackBtn'>Attack3</button>
-                    <button className='attackBtn'>Attack4</button> */}
+                {...props}>
+            </canvas>
+            <div id="userInterface">
+                <div className='nameCardEnemy'>
+                    <h1 className='nameBar'>Draggle</h1>
+                    <div style={{ position: 'relative' }}>
+                        <div className='healthBarEmpty'></div>
+                        <div className='healthBar' id="enemyHealthBar"></div>
+                    </div>
                 </div>
-                <div className='attackTypeDiv'>
-                    <h3 className='battleFont' id="attackType">Attack Type</h3>
+
+                <div className='nameCardHero'>
+                    <h1 className='nameBar'>Emby</h1>
+                    <div style={{ position: 'relative' }}>
+                        <div className='healthBarEmpty'></div>
+                        <div className='healthBar' id="playerHealthBar"></div>
+                    </div>
+                </div>
+
+                <div className='battleText' >
+                    <div className='battleDialogue' id='dialogueBox' style={{ display: 'none' }}> testing test</div>
+                    <div className='attackDiv' id="attacksBox"></div>
+                    <div className='attackTypeDiv'>
+                        <h3 className='battleFont' id="attackType">Attack Type</h3>
+                    </div>
                 </div>
             </div>
         </div>
