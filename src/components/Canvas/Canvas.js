@@ -85,8 +85,13 @@ function Canvas(props) {
             attack({ attack, recipient }) {
                 const tl = gsap.timeline()
 
+                this.health -= attack.damage
+
                 let movementDistance = 20
-                if (this.isEnemy) movementDistance -20
+                if (this.isEnemy) movementDistance = -20
+
+                let healthBar = '#enemyHealthBar'
+                if (this.isEnemy) healthBar = '#playerHealthBar'
 
                 tl.to(this.position, {
                     x: this.position.x - movementDistance
@@ -95,8 +100,9 @@ function Canvas(props) {
                     duration: 0.1,
                     onComplete: () => {
                         //enemy actually gets hit
-                        gsap.to('#enemyHealthBar', {
-                            width: this.health - attack.damage + '%'
+                    
+                        gsap.to(healthBar, {
+                            width: this.health  + '%'
                         })
 
                         gsap.to(recipient.position, {
@@ -471,13 +477,13 @@ function Canvas(props) {
 
         document.querySelectorAll('button').forEach((button) => {
             button.addEventListener('click', () => {
-                draggle.attack({
+                emby.attack({
                     attack: {
                         name: 'Tackle',
                         damage: 10,
                         type: 'Normal'
                     },
-                    recipient: emby
+                    recipient: draggle
                 })
             })
         })
@@ -539,7 +545,7 @@ function Canvas(props) {
                 <h1 className='nameBar'>Emby</h1>
                 <div style={{ position: 'relative' }}>
                     <div className='healthBarEmpty'></div>
-                    <div className='healthBar'></div>
+                    <div className='healthBar' id="playerHealthBar"></div>
                 </div>
             </div>
 
