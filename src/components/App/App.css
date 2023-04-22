@@ -241,3 +241,19 @@ Battle System Health Bars
   left: 0;
   right: 0;
 }
+
+/* --------------------------------------------------------------------------------
+Battle System dialogue
+-------------------------------------------------------------------------------- */
+.battleDialogue {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  padding: 12px;
+  font-family: "Press Start 2P";
+  font-size: 16px;
+  color: black;
+}

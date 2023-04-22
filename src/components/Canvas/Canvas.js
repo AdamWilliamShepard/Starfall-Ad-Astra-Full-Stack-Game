@@ -49,7 +49,8 @@ function Canvas(props) {
                 sprites = [],
                 animate = false,
                 isEnemy = false,
-                rotation = 0
+                rotation = 0,
+                name
             }) {
                 this.position = position
                 this.image = image
@@ -64,6 +65,7 @@ function Canvas(props) {
                 this.health = 100 // this can be scaled up by passing in additional arguments later
                 this.isEnemy = isEnemy
                 this.rotation = rotation
+                this.name = name
             }
             //function to draw the image onto the screen at the associated coordinates.
             draw() {
@@ -100,6 +102,8 @@ function Canvas(props) {
                 }
             }
             attack({ attack, recipient, renderedSprites }) {
+                document.querySelector('#dialogueBox').style.display = 'block'
+                document.querySelector('#dialogueBox').innerHTML = this.name + ' used ' + attack.name
                 let healthBar = '#enemyHealthBar'
                 if (this.isEnemy) healthBar = '#playerHealthBar'
 
@@ -519,7 +523,8 @@ function Canvas(props) {
                 hold: 30
             },
             animate: true,
-            isEnemy: true
+            isEnemy: true,
+            name: 'Draggle'
         })
 
         //player battle combatant
@@ -533,7 +538,8 @@ function Canvas(props) {
                 max: 4,
                 hold: 30
             },
-            animate: true
+            animate: true,
+            name: 'Emby'
         })
         const renderedSprites = [draggle, emby]
         function animateBattle() {
@@ -627,6 +633,7 @@ function Canvas(props) {
                 height="576"
                 {...props}></canvas>
             <div className='battleText' >
+                <div className='battleDialogue' id='dialogueBox' style={{display: 'none'}}> testing test</div>
                 <div className='attackDiv'>
                     <button className='attackBtn'>Tackle</button>
                     <button className='attackBtn'>Fireball</button>
