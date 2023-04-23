@@ -12,6 +12,7 @@ import editInfo from './editinfo.reducer';
 import battleZonesReducer from './battlezone.reducer';
 import attacksReducer from './attacks.reducer';
 import monstersReducer from './monsters.reducer';
+import audioReducer from './audio.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -32,7 +33,8 @@ const rootReducer = combineReducers({
   editInfo,
   battleZonesReducer,
   attacksReducer,
-  monstersReducer
+  monstersReducer,
+  audioReducer
 });
 
 export default rootReducer;
