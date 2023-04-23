@@ -583,8 +583,8 @@ function Canvas(props) {
 
             draggle = new Monster({
                 position: {
-                    x: 800,
-                    y: 100
+                    x: 750,
+                    y: 200
                 },
                 image: {
                     src: require('../img/draggleSprite.png')
