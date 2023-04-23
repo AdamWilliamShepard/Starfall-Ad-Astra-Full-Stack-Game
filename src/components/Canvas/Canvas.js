@@ -36,7 +36,7 @@ function Canvas(props) {
             }
             //drawing our boundary blocks as red/transparent and filling them based on coords and height/width
             draw() {
-                context.fillStyle = "rgba(255, 0, 0, 0.5)"
+                context.fillStyle = "rgba(255, 0, 0, 0.0)"
                 context.fillRect(this.position.x, this.position.y, this.width, this.height)
             }
         }
@@ -140,6 +140,8 @@ function Canvas(props) {
                 gsap.to(this, {
                     opacity: 0
                 })
+                audio.battle.stop()
+                audio.victory.play()
             }
 
             attack({ attack, recipient, renderedSprites }) {
@@ -156,6 +158,7 @@ function Canvas(props) {
 
                 switch (attack.name) {
                     case 'Fireball':
+                        audio.initFireball.play()
                         const fireballImage = new Image()
                         fireballImage.src = require('../img/fireball.png')
                         const fireball = new Sprite({
@@ -176,7 +179,10 @@ function Canvas(props) {
 
                         gsap.to(fireball.position, {
                             x: recipient.position.x,
-                            y: recipient.position.y, onComplete: () => {
+                            y: recipient.position.y, 
+                            onComplete: () => {
+                                //enemy actually gets hit
+                                audio.fireballHit.play()
                                 gsap.to(healthBar, {
                                     width: recipient.health + '%'
                                 })
@@ -213,7 +219,7 @@ function Canvas(props) {
                             duration: 0.1,
                             onComplete: () => {
                                 //enemy actually gets hit
-
+                                audio.tackleHit.play()
                                 gsap.to(healthBar, {
                                     width: recipient.health + '%'
                                 })
@@ -408,9 +414,9 @@ function Canvas(props) {
                         overlappingArea > player.width * player.height / 2 //If 1/2 of the sprite is in the battle zone, it is colliding
                         && Math.random() < 0.01
                     ) {
-                        console.log('activate battle')
+
                         //deactivate current activation loop
-                        // window.cancelAnimationFrame(animationId)
+                        window.cancelAnimationFrame(animationId)
 
                         audio.Map.stop()
                         audio.initBattle.play()
@@ -646,6 +652,7 @@ function Canvas(props) {
                                         opacity: 0
                                     })
                                     battle.initiated = false
+                                    audio.Map.play()
                                 }
                             })
                         })
@@ -675,6 +682,7 @@ function Canvas(props) {
                                             opacity: 0
                                         })
                                         battle.initiated = false
+                                        audio.Map.play()
                                     }
                                 })
                             })
