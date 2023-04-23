@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {Howl}
+import { Howl } from 'howler';
+import { callMapSound } from '../Helpers/Helpers';
+import { mapSoundSrc } from '../Audio/AudioHelper';
+import { localMapSoundSrc, fireballHit, initBattle, initFireball, battle, tackleHit, victory } from '../Audio/AudioHelper';
 
 
 function Canvas(props) {
@@ -9,7 +12,7 @@ function Canvas(props) {
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
     const monsters = useSelector(store => store.monstersReducer) //This is not fully functional yet.
-    const audio = useSelector(store => store.audioReducer)
+
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -752,7 +755,7 @@ function Canvas(props) {
         let clicked = false
         addEventListener('click', () => {
             if (!clicked) {
-                audio.map.play()
+                callMapSound(localMapSoundSrc)
                 clicked = true
             }
         })
