@@ -32,7 +32,7 @@ const rootReducer = combineReducers({
   editInfo,
   battleZonesReducer,
   attacksReducer,
-  monstersReducer
+  monstersReducer,
 });
 
 export default rootReducer;

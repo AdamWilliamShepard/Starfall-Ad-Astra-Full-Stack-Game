@@ -1,5 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { audio } from '../Helpers/Helpers';
 
 
 function Canvas(props) {
@@ -35,7 +36,7 @@ function Canvas(props) {
             }
             //drawing our boundary blocks as red/transparent and filling them based on coords and height/width
             draw() {
-                context.fillStyle = "rgba(255, 0, 0, 0.5)"
+                context.fillStyle = "rgba(255, 0, 0, 0.0)"
                 context.fillRect(this.position.x, this.position.y, this.width, this.height)
             }
         }
@@ -100,7 +101,6 @@ function Canvas(props) {
                     else this.frames.val = 0 //reset to the beginning of the first sprite.
                 }
             }
-
         }
 
         class Monster extends Sprite {
@@ -140,6 +140,8 @@ function Canvas(props) {
                 gsap.to(this, {
                     opacity: 0
                 })
+                audio.battle.stop()
+                audio.victory.play()
             }
 
             attack({ attack, recipient, renderedSprites }) {
@@ -156,6 +158,7 @@ function Canvas(props) {
 
                 switch (attack.name) {
                     case 'Fireball':
+                        audio.initFireball.play()
                         const fireballImage = new Image()
                         fireballImage.src = require('../img/fireball.png')
                         const fireball = new Sprite({
@@ -176,7 +179,10 @@ function Canvas(props) {
 
                         gsap.to(fireball.position, {
                             x: recipient.position.x,
-                            y: recipient.position.y, onComplete: () => {
+                            y: recipient.position.y, 
+                            onComplete: () => {
+                                //enemy actually gets hit
+                                audio.fireballHit.play()
                                 gsap.to(healthBar, {
                                     width: recipient.health + '%'
                                 })
@@ -213,7 +219,7 @@ function Canvas(props) {
                             duration: 0.1,
                             onComplete: () => {
                                 //enemy actually gets hit
-
+                                audio.tackleHit.play()
                                 gsap.to(healthBar, {
                                     width: recipient.health + '%'
                                 })
@@ -408,9 +414,14 @@ function Canvas(props) {
                         overlappingArea > player.width * player.height / 2 //If 1/2 of the sprite is in the battle zone, it is colliding
                         && Math.random() < 0.01
                     ) {
-                        console.log('activate battle')
+
                         //deactivate current activation loop
-                        // window.cancelAnimationFrame(animationId)
+                        window.cancelAnimationFrame(animationId)
+
+                        audio.Map.stop()
+                        audio.initBattle.play()
+                        audio.battle.play()
+
                         battle.initiated = true
                         gsap.to('#overlappingDiv', {
                             opacity: 1,
@@ -536,7 +547,7 @@ function Canvas(props) {
         }
 
         //calling the animate function
-        // animate()
+        animate()
 
         const battleBackgoundImage = new Image()
         battleBackgoundImage.src = require('../img/battleBackground.png')
@@ -641,6 +652,7 @@ function Canvas(props) {
                                         opacity: 0
                                     })
                                     battle.initiated = false
+                                    audio.Map.play()
                                 }
                             })
                         })
@@ -670,6 +682,7 @@ function Canvas(props) {
                                             opacity: 0
                                         })
                                         battle.initiated = false
+                                        audio.Map.play()
                                     }
                                 })
                             })
@@ -692,12 +705,8 @@ function Canvas(props) {
                 sprite.draw()
             })
         }
-        initBattle()
-        animateBattle() //************************************Activated so I can work on this. */
-
-
-
-
+        // initBattle()
+        // animateBattle() //************************************Activated so I can work on this. */
 
         document.querySelector('#dialogueBox').addEventListener('click', (event) => {
             if (queue.length > 0) {
@@ -747,18 +756,24 @@ function Canvas(props) {
                     break
             }
         })
+        let clicked = false
+        addEventListener('click', () => {
+            if (!clicked) {
+                audio.Map.play()
+                clicked = true
+            }
+        })
     }, []);
 
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
-
             <canvas ref={canvasRef}
                 width="1024"
                 height="576"
                 {...props}>
             </canvas>
-            <div id="userInterface">
+            <div id="userInterface" style={{ display: 'none' }}>
                 <div className='nameCardEnemy'>
                     <h1 className='nameBar'>Draggle</h1>
                     <div style={{ position: 'relative' }}>
