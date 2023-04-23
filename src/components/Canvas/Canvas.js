@@ -1,9 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Howl } from 'howler';
-import { callMapSound } from '../Helpers/Helpers';
-import { mapSoundSrc } from '../Audio/AudioHelper';
-import { localMapSoundSrc, fireballHit, initBattle, initFireball, battle, tackleHit, victory } from '../Audio/AudioHelper';
+import { audio } from '../Helpers/Helpers';
 
 
 function Canvas(props) {
@@ -12,7 +9,6 @@ function Canvas(props) {
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
     const monsters = useSelector(store => store.monstersReducer) //This is not fully functional yet.
-
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -105,7 +101,6 @@ function Canvas(props) {
                     else this.frames.val = 0 //reset to the beginning of the first sprite.
                 }
             }
-
         }
 
         class Monster extends Sprite {
@@ -416,6 +411,11 @@ function Canvas(props) {
                         console.log('activate battle')
                         //deactivate current activation loop
                         // window.cancelAnimationFrame(animationId)
+
+                        audio.Map.stop()
+                        audio.initBattle.play()
+                        audio.battle.play()
+
                         battle.initiated = true
                         gsap.to('#overlappingDiv', {
                             opacity: 1,
@@ -700,10 +700,6 @@ function Canvas(props) {
         // initBattle()
         // animateBattle() //************************************Activated so I can work on this. */
 
-
-
-
-
         document.querySelector('#dialogueBox').addEventListener('click', (event) => {
             if (queue.length > 0) {
                 queue[0]()
@@ -755,7 +751,7 @@ function Canvas(props) {
         let clicked = false
         addEventListener('click', () => {
             if (!clicked) {
-                callMapSound(localMapSoundSrc)
+                audio.Map.play()
                 clicked = true
             }
         })
@@ -764,7 +760,6 @@ function Canvas(props) {
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
-
             <canvas ref={canvasRef}
                 width="1024"
                 height="576"
