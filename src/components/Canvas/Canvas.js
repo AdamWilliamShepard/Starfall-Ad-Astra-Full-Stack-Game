@@ -9,6 +9,15 @@ function Canvas(props) {
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
     const monsters = useSelector(store => store.monstersReducer) //This is not fully functional yet.
+    const backgroundRef = useRef(null)
+
+    const [saveCoord, setSaveCoord] = useState({
+        position: {
+            x: 950,
+            y: 470
+        }
+    })
+    console.log('This is saveCoord', saveCoord)
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -179,7 +188,7 @@ function Canvas(props) {
 
                         gsap.to(fireball.position, {
                             x: recipient.position.x,
-                            y: recipient.position.y, 
+                            y: recipient.position.y,
                             onComplete: () => {
                                 //enemy actually gets hit
                                 audio.fireballHit.play()
@@ -335,6 +344,8 @@ function Canvas(props) {
             image: backgroundImage
         })
 
+            backgroundRef.current = background
+
         //Create a new sprite called foreground using the image and at the given coords.
         const foreground = new Sprite({
             position: {
@@ -380,7 +391,7 @@ function Canvas(props) {
         // Loop the image continously to provide animation.
         function animate() {
             const animationId = window.requestAnimationFrame(animate)
-
+            // console.log(background.position)
             //The background image to be displayed, the x coord and the y coord
             background.draw()
             boundaries.forEach(Boundary => {
@@ -765,9 +776,25 @@ function Canvas(props) {
         })
     }, []);
 
+    const handleSave = (event) => {
+        if (backgroundRef.current) {
+          setSaveCoord({
+            position: {
+              x: backgroundRef.current.position.x,
+              y: backgroundRef.current.position.y
+            }
+          });
+        }
+      }
+
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
+            <div className='menu'>
+                <button className='menuBtn' onClick={handleSave}> Save</button><br />
+                <button className='menuBtn'> Menu</button><br />
+                <button className='menuBtn'> Sound</button><br />
+            </div>
             <canvas ref={canvasRef}
                 width="1024"
                 height="576"
@@ -791,7 +818,7 @@ function Canvas(props) {
                 </div>
 
                 <div className='battleText' >
-                    <div className='battleDialogue' id='dialogueBox' style={{ display: 'none' }}> testing test</div>
+                    <div className='battleDialogue' id='dialogueBox' style={{ display: 'none' }}></div>
                     <div className='attackDiv' id="attacksBox"></div>
                     <div className='attackTypeDiv'>
                         <h3 className='battleFont' id="attackType">Attack Type</h3>

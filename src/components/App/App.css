@@ -1,5 +1,5 @@
 * {
-  font-family:  "Press Start 2P";
+  font-family: "Press Start 2P";
 }
 
 html,
@@ -266,4 +266,17 @@ Battle System dialogue
 
 .battleDialogue:hover {
   background-color: lightblue;
+}
+
+.menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menuBtn:hover {
+  background-image: linear-gradient(rgb(98, 165, 217), rgb(223, 78, 78));
+  transform: scale(1.02);
 }

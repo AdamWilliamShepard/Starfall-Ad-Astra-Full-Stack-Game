@@ -13,9 +13,33 @@ function* getHeroStats() {
     }
 }
 
-//FOR ROOT SAGA
-function* getHeroStatsSaga() {
-    yield takeLatest('GET_HERO_STATS', getHeroStats)
+//SAGA POST 
+function* postHeroInfo(action) {
+    try {
+        console.log('This is action.payload', action.payload)
+        yield axios.post('/api/herostats', action.payload)
+        // yield put({ type: 'SET_HERO_INFO'})
+    } catch (error) {
+        console.log('get request failed', error)
+    }
 }
 
-export default getHeroStatsSaga;
+//SAGA POST
+function* postHeroStats(action) {
+    try {
+        console.log('This is action.payload', action.payload)
+        yield axios.post('/api/herostats/stats', action.payload)
+        // yield put({ type: 'SET_HERO_INFO'})
+    } catch (error) {
+        console.log('get request failed', error)
+    }
+}
+
+//FOR ROOT SAGA
+function* heroSaga() {
+    yield takeLatest('GET_HERO_STATS', getHeroStats)
+    yield takeLatest('POST_HERO_INFO', postHeroInfo)
+    yield takeLatest('POST_HERO_STATS', postHeroStats)
+}
+
+export default heroSaga;

@@ -2,8 +2,7 @@ import { all } from 'redux-saga/effects';
 import loginSaga from './login.saga';
 import registrationSaga from './registration.saga';
 import userSaga from './user.saga';
-import getHeroStatsSaga from './getHeroStats.saga';
-import postHeroInfoSaga from './postHeroInfo.saga';
+import heroSaga from './getHeroStats.saga';
 import changeProfileCreatedSaga from './changeProfileCreated.saga';
 import getHeroInventorySaga from './getHeroInventory.saga';
 import getEquipmentSaga from './getEquipment.saga';
@@ -21,8 +20,7 @@ export default function* rootSaga() {
     loginSaga(), // login saga is now registered
     registrationSaga(),
     userSaga(),
-    getHeroStatsSaga(),
-    postHeroInfoSaga(),
+    heroSaga(),
     changeProfileCreatedSaga(),
     getHeroInventorySaga(),
     getEquipmentSaga(),
