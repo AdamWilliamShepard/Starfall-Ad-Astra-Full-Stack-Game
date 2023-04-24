@@ -291,11 +291,9 @@ function Canvas(props) {
         })
 
         const backgroundImage = new Image()
-        // backgroundImage.src = require('../img/PelletTown.png')
         backgroundImage.src = require('../img/StarfallTileMap.png')
 
         const foregroundImage = new Image()
-        // foregroundImage.src = require('../img/foregroundObjects.png')
         foregroundImage.src = require('../img/StarfallForeground.png')
 
         const playerDownImage = new Image()

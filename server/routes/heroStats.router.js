@@ -60,13 +60,29 @@ router.post('/', rejectUnauthenticated, (req, res) => {
     VALUES ($1, $2, $3, $4);`
     let queryValues = [req.body.Name, req.body.Background, req.body.Avatar, req.user.id]
     pool.query(queryText, queryValues)
-    .then((result) => {
-        res.sendStatus(201)
-    })
-    .catch((error) => {
-        console.log(error)
-        res.sendStatus(500)
-    })
+        .then((result) => {
+            res.sendStatus(201)
+        })
+        .catch((error) => {
+            console.log(error)
+            res.sendStatus(500)
+        })
+});
+
+router.post('/stats', rejectUnauthenticated, (req, res) => {
+    console.log("this is req.body", req.body)
+    let queryText = `
+    INSERT INTO "HeroStats" ("HP", "Energy", "Attack", "Defense", "Exp", "user_id")
+    VALUES (100, 100, 10, 10, 0, $1)`
+    let queryValues = [req.user.id]
+    pool.query(queryText, queryValues)
+        .then((result) => {
+            res.sendStatus(201)
+        })
+        .catch((error) => {
+            console.log(error)
+            res.sendStatus(500)
+        })
 });
 
 router.put('/:id', (req, res) => {
