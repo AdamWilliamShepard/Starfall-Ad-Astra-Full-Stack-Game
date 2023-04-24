@@ -1,25 +1,23 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { audio } from '../Helpers/Helpers';
 
 
 function Canvas(props) {
     const canvasRef = useRef(null);
+    const backgroundRef = useRef(null)
+    const dispatch = useDispatch()
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
-    const monsters = useSelector(store => store.monstersReducer) //This is not fully functional yet.
-    const backgroundRef = useRef(null)
+    const saveInfo = useSelector(store => store.savePositionReducer)
+    console.log('This is saveInfo Reducer', saveInfo)
 
-    const [saveCoord, setSaveCoord] = useState({
-        position: {
-            x: 950,
-            y: 470
-        }
-    })
-    console.log('This is saveCoord', saveCoord)
+    const [saveCoord, setSaveCoord] = useState({ x: -950, y: -450})
+    console.log('this is saveCoord local state', saveCoord)
 
     useEffect(() => {
+        dispatch({ type: 'GET_SAVE_INFO' });
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
@@ -253,18 +251,17 @@ function Canvas(props) {
 
                         break;
                 }
-
             }
-
         }
 
         //Array for pushing our collision boundaries into.
         const boundaries = []
 
-        //constant for the offset for our map starting position
         const offset = {
-            x: -950,
-            y: -470
+            // x: -1022,
+            // y: -605
+            x: saveInfo?.x,
+            y: saveInfo?.y
         }
 
         //looping over each row where i is the index of the row and each symbol within that row where j is the index of the symbol. 
@@ -319,8 +316,10 @@ function Canvas(props) {
 
         const player = new Sprite({
             position: {
-                x: canvas.width / 2 - (192 / 4) / 2, //location to be rendered at on the x coord, 192 is pixels of the sprite-sheet
-                y: canvas.height / 2 - 68 / 2, //location to be rendered at on the y coord, 68 is pixels of the sprite-sheet
+                x: canvas.width / 2 - (192 / 4) / 2,
+                //location to be rendered at on the x coord, 192 is pixels of the sprite-sheet
+                y: canvas.height / 2 - 68 / 2,
+                //location to be rendered at on the y coord, 68 is pixels of the sprite-sheet
             },
             image: playerDownImage,
             frames: {
@@ -344,7 +343,7 @@ function Canvas(props) {
             image: backgroundImage
         })
 
-            backgroundRef.current = background
+        backgroundRef.current = background
 
         //Create a new sprite called foreground using the image and at the given coords.
         const foreground = new Sprite({
@@ -461,8 +460,6 @@ function Canvas(props) {
 
             //If any of the associated keys are pressed moved the background position by 3 pixels each 'tick' and detecting for boundary
             //collision
-            // let moving = true
-            // player.moving = false
             if (keys.w.pressed && lastkey === 'w') {
                 player.animate = true
                 player.image = player.sprites.up
@@ -716,8 +713,6 @@ function Canvas(props) {
                 sprite.draw()
             })
         }
-        // initBattle()
-        // animateBattle() //************************************Activated so I can work on this. */
 
         document.querySelector('#dialogueBox').addEventListener('click', (event) => {
             if (queue.length > 0) {
@@ -774,18 +769,20 @@ function Canvas(props) {
                 clicked = true
             }
         })
-    }, []);
+    }, [dispatch]);
 
     const handleSave = (event) => {
         if (backgroundRef.current) {
-          setSaveCoord({
-            position: {
-              x: backgroundRef.current.position.x,
-              y: backgroundRef.current.position.y
-            }
-          });
+            setSaveCoord({
+                x: backgroundRef.current.position.x,
+                y: backgroundRef.current.position.y
+            })
         }
-      }
+        dispatch({
+            type: 'POST_SAVE_INFO',
+            payload: saveCoord
+        })
+    }
 
     return (
         <div className='battleTransitionParent'>
