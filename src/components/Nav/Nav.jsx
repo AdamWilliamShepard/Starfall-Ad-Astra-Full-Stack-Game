@@ -46,7 +46,7 @@ function Nav() {
         </Link> */}
 
         <Link className="navLink" to="/canvas">
-          Canvas
+          Play Game
         </Link>
 
         <Link className="navLink" to="/form">

@@ -1,7 +1,7 @@
 import React from 'react';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect} from 'react';
+import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Paper, Card, CardActions, CardContent, CardMedia, Typography, styled } from '@mui/material';
 
@@ -55,10 +55,10 @@ function DisplayHeroInfo() {
             image={specialAvatar}
           />
           <CardContent sx={{ width: '100%', alignItems: "center" }}>
-              <Typography gutterBottom variant="h5" component="div">
-                Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-                Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
-              </Typography>
+            <br /><br />
+            Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
+            Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
+
           </CardContent>
           <CardActions sx={{ justifyContent: "center" }}>
           </CardActions>

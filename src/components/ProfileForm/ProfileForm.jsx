@@ -72,6 +72,7 @@ export default function ProfileForm() {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
+                <MenuItem value={'https://i.imgur.com/1bjWBOt.png'}>Young Hero</MenuItem>
                 <MenuItem value={'https://i.imgur.com/wy4RKGv.png'}>Gold Knight</MenuItem>
                 <MenuItem value={'https://i.imgur.com/FgSII4v.png'}>Dog Ninja</MenuItem>
                 <MenuItem value={'https://i.imgur.com/BJZbhCc.png'}>Green Ninja</MenuItem>

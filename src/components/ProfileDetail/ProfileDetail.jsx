@@ -69,9 +69,9 @@ function ProfileDetail() {
     setEditState(false)
   }
 
-  function handleDelete(itemId){
+  function handleDelete(itemId) {
     dispatch({ type: 'DELETE_HERO_INVENTORY', payload: itemId })
-    dispatch ({type: 'GET_EQUIPMENT' })
+    dispatch({ type: 'GET_EQUIPMENT' })
   }
 
   return (
@@ -104,8 +104,8 @@ function ProfileDetail() {
                 :
                 <Item>
                   {specialAvatar && <img src={specialAvatar} alt="Avatar" height='100' />}<br />
-                  Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-                  Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
+                  <h5>Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
+                  Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br /></h5>
                   <button onClick={handleEditClick}>Edit Your Hero</button>
                 </Item>
               }
@@ -139,32 +139,10 @@ function ProfileDetail() {
             </Grid>
             <Grid item xs={6}>
               <Item>
-                <h3>Stats</h3>
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                    </TableHead>
-                    <TableBody>
-
-                      <TableRow>
-                        <TableCell align="left">HP: {heroStats && heroStats.length > 0 ? heroStats[0].HP : "Loading"}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell align="left"> Energy: {heroStats && heroStats.length > 0 ? heroStats[0].Energy : "Loading"}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell align="left"> Attack: {heroStats && heroStats.length > 0 ? heroStats[0].Attack : "Loading"}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell align="left">Defense: {heroStats && heroStats.length > 0 ? heroStats[0].Defense : "Loading"}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell align="left">EXP: {heroStats && heroStats.length > 0 ? heroStats[0].Exp : "Loading"}</TableCell>
-                      </TableRow>
-
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                {specialAvatar && <img src='https://i.imgur.com/LLP2aTE.png' alt="Avatar" height='100' />}<br />
+                <h5>Ally Name: Emby <br />
+                  Type: Fire
+                </h5> <br />
               </Item>
             </Grid>
             <Grid item xs={6}>
