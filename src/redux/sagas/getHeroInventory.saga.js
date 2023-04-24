@@ -13,6 +13,18 @@ function* getHeroInventory(action) {
     }
 }
 
+//SAGA GET
+function* getEquipment(action) {
+    try {
+        const equipList = yield axios.get('/api/herostats/equipment')
+        console.log('itemList', equipList)
+
+        yield put({ type: 'SET_EQUIPMENT', payload: equipList.data })
+    } catch (error) {
+        console.log('get request failed', error)
+    }
+}
+
 function* deleteHeroInventory(action) {
     try {
         yield axios.delete(`/api/herostats/delete/${action.payload}`)
@@ -26,6 +38,7 @@ function* deleteHeroInventory(action) {
 function* getHeroInventorySaga() {
     yield takeLatest('GET_HERO_INVENTORY', getHeroInventory),
     yield takeLatest('DELETE_HERO_INVENTORY', deleteHeroInventory)
+    yield takeLatest('GET_EQUIPMENT', getEquipment)
 }
 
 export default getHeroInventorySaga;

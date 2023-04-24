@@ -2,10 +2,9 @@ import { all } from 'redux-saga/effects';
 import loginSaga from './login.saga';
 import registrationSaga from './registration.saga';
 import userSaga from './user.saga';
-import heroSaga from './getHeroStats.saga';
+import heroSaga from './hero.saga';
 import changeProfileCreatedSaga from './changeProfileCreated.saga';
 import getHeroInventorySaga from './getHeroInventory.saga';
-import getEquipmentSaga from './getEquipment.saga';
 
 
 // rootSaga is the primary saga.
@@ -23,6 +22,5 @@ export default function* rootSaga() {
     heroSaga(),
     changeProfileCreatedSaga(),
     getHeroInventorySaga(),
-    getEquipmentSaga(),
   ]);
 }
