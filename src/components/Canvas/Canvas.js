@@ -254,8 +254,8 @@ function Canvas(props) {
 
         //constant for the offset for our map starting position
         const offset = {
-            x: -735,
-            y: -655
+            x: -950,
+            y: -470
         }
 
         //looping over each row where i is the index of the row and each symbol within that row where j is the index of the symbol. 
@@ -291,10 +291,12 @@ function Canvas(props) {
         })
 
         const backgroundImage = new Image()
-        backgroundImage.src = require('../img/PelletTown.png')
+        // backgroundImage.src = require('../img/PelletTown.png')
+        backgroundImage.src = require('../img/StarfallTileMap.png')
 
         const foregroundImage = new Image()
-        foregroundImage.src = require('../img/foregroundObjects.png')
+        // foregroundImage.src = require('../img/foregroundObjects.png')
+        foregroundImage.src = require('../img/StarfallForeground.png')
 
         const playerDownImage = new Image()
         playerDownImage.src = require('../img/playerDown.png')
