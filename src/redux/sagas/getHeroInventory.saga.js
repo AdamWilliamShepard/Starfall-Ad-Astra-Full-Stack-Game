@@ -5,7 +5,7 @@ import { put, takeLatest } from 'redux-saga/effects';
 function* getHeroInventory(action) {
     try {
         const inventoryList = yield axios.get('/api/herostats/inventory')
-        console.log('itemList', inventoryList)
+        // console.log('itemList', inventoryList)
 
         yield put({ type: 'SET_HERO_INVENTORY', payload: inventoryList.data })
     } catch (error) {
@@ -17,7 +17,7 @@ function* getHeroInventory(action) {
 function* getEquipment(action) {
     try {
         const equipList = yield axios.get('/api/herostats/equipment')
-        console.log('itemList', equipList)
+        // console.log('itemList', equipList)
 
         yield put({ type: 'SET_EQUIPMENT', payload: equipList.data })
     } catch (error) {

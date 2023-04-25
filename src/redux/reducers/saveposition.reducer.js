@@ -1,7 +1,4 @@
-const savePositionReducer = (state = {
-    x: -950,
-    y: -470
-}, action) => {
+const savePositionReducer = (state = {}, action) => {
     switch (action.type) {
         case 'SET_SAVE_POSITION':
             const lastItem = action.payload[action.payload.length - 1]; // get last item in array

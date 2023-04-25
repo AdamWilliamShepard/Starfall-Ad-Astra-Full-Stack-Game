@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { audio } from '../Helpers/Helpers';
+import { SpriteWrapper } from '../Classes/Sprite';
 
 
 function Canvas(props) {
@@ -10,11 +11,9 @@ function Canvas(props) {
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
-    const saveInfo = useSelector(store => store.savePositionReducer)
-    console.log('This is saveInfo Reducer', saveInfo)
 
-    const [saveCoord, setSaveCoord] = useState({ x: -950, y: -450})
-    console.log('this is saveCoord local state', saveCoord)
+    const saveInfo = useSelector(store => store.savePositionReducer)
+    const [saveCoord, setSaveCoord] = useState({})
 
     useEffect(() => {
         dispatch({ type: 'GET_SAVE_INFO' });
@@ -49,8 +48,8 @@ function Canvas(props) {
         }
 
         //Create a new class called sprite which we can use multiple times for various sprites.
+        //constructor allows me to define the arguments that each sprite will take it when created.
         class Sprite {
-            //constructor allows me to define the arguments that each sprite will take it when created.
             constructor({
                 position,
                 velocity,
@@ -258,11 +257,25 @@ function Canvas(props) {
         const boundaries = []
 
         const offset = {
-            // x: -1022,
-            // y: -605
-            x: saveInfo?.x,
-            y: saveInfo?.y
+            x: -950,
+            y: -475
         }
+        console.log('this is offset prior to the fetchData async function', offset)
+        console.log('this is saveInfo(Reducer) prior to fetchData', saveInfo)
+
+        const fetchData = async () => {
+            await (1000)
+            console.log('Inside FetchData!')
+            const offset = {
+                x: saveInfo.x,
+                y: saveInfo.y
+            }
+            console.log('Inside FetchData- this is now the value of offset:', offset)
+            console.log('This is the value I want offset to be(saveInfo):', saveInfo)
+        }
+
+        fetchData().catch(console.error)
+
 
         //looping over each row where i is the index of the row and each symbol within that row where j is the index of the symbol. 
         //ergo 'i' is the y axis and 'j' is the x axis.
@@ -782,6 +795,7 @@ function Canvas(props) {
             type: 'POST_SAVE_INFO',
             payload: saveCoord
         })
+        console.log('This is the saveCoord payload', saveCoord)
     }
 
     return (

@@ -5,7 +5,7 @@ import { put, takeLatest } from 'redux-saga/effects';
 function* getHeroStats() {
     try {
         const itemList = yield axios.get('/api/herostats')
-        console.log('itemList', itemList)
+        // console.log('itemList', itemList)
 
         yield put({ type: 'SET_HERO_STATS', payload: itemList.data })
     } catch (error) {
