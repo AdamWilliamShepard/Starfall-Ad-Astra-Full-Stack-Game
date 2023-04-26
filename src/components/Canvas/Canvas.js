@@ -21,9 +21,9 @@ const Canvas = (props) => {
 
     useEffect(() => {
 
-        if (sound) {
-            audio.Map.play()
-        }
+        // if (sound) {
+        //     audio.Map.play()
+        // }
 
         const fetchData = async () => {
             dispatch({ type: 'GET_SAVE_INFO' })
@@ -497,7 +497,6 @@ const Canvas = (props) => {
                     x: backgroundRef.current.position.x,
                     y: backgroundRef.current.position.y
                 })
-                console.log('this is saveCoord', saveCoord)
             }
             else if (keys.a.pressed && lastkey === 'a') {
                 player.animate = true
@@ -525,7 +524,6 @@ const Canvas = (props) => {
                     x: backgroundRef.current.position.x,
                     y: backgroundRef.current.position.y
                 })
-                console.log('this is saveCoord', saveCoord)
             }
             else if (keys.s.pressed && lastkey === 's') {
                 player.animate = true
@@ -553,7 +551,6 @@ const Canvas = (props) => {
                     x: backgroundRef.current.position.x,
                     y: backgroundRef.current.position.y
                 })
-                console.log('this is saveCoord', saveCoord)
             }
             else if (keys.d.pressed && lastkey === 'd') {
                 player.animate = true
@@ -581,7 +578,6 @@ const Canvas = (props) => {
                     x: backgroundRef.current.position.x,
                     y: backgroundRef.current.position.y
                 })
-                console.log('this is saveCoord', saveCoord)
             }
         }
 
@@ -798,12 +794,12 @@ const Canvas = (props) => {
 
     const handleSound = () => {
         if (!sound) {
+            setSound(!sound)
             audio.Map.play()
-            setSound(true)
         }
         else if (sound) {
+            setSound(!sound)
             audio.Map.pause()
-            setSound(false)
         }
     }
 
