@@ -3,21 +3,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { audio } from '../Helpers/Helpers';
 
 
-function Canvas(props) {
+const Canvas = (props) => {
     const canvasRef = useRef(null);
     const backgroundRef = useRef(null)
     const dispatch = useDispatch()
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
-    const saveInfo = useSelector(store => store.savePositionReducer)
-    console.log('This is saveInfo Reducer', saveInfo)
+    const [key, Setkey] = useState(0)
+    // const [offset, setOffset] = useState({ x: -956, y: -475 })
+  
+    let offset = useSelector(store => store.savePositionReducer)
+    // console.log('this is databaseCoords', DatabaseCoords)
+    console.log('this is offset', offset)
 
-    const [saveCoord, setSaveCoord] = useState({ x: -950, y: -450})
-    console.log('this is saveCoord local state', saveCoord)
+    let [saveCoord, setSaveCoord] = useState({})
 
     useEffect(() => {
-        dispatch({ type: 'GET_SAVE_INFO' });
+
+        const fetchData = async () => {
+            dispatch({ type: 'GET_SAVE_INFO' })
+            await key +1
+        }
+        fetchData()
+
+        if (backgroundRef.current) {
+            backgroundRef.current.position.x = offset.x;
+            backgroundRef.current.position.y = offset.y;
+        }
+
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
@@ -49,8 +63,8 @@ function Canvas(props) {
         }
 
         //Create a new class called sprite which we can use multiple times for various sprites.
+        //constructor allows me to define the arguments that each sprite will take it when created.
         class Sprite {
-            //constructor allows me to define the arguments that each sprite will take it when created.
             constructor({
                 position,
                 velocity,
@@ -256,13 +270,6 @@ function Canvas(props) {
 
         //Array for pushing our collision boundaries into.
         const boundaries = []
-
-        const offset = {
-            // x: -1022,
-            // y: -605
-            x: saveInfo?.x,
-            y: saveInfo?.y
-        }
 
         //looping over each row where i is the index of the row and each symbol within that row where j is the index of the symbol. 
         //ergo 'i' is the y axis and 'j' is the x axis.
@@ -769,7 +776,8 @@ function Canvas(props) {
                 clicked = true
             }
         })
-    }, [dispatch]);
+
+    }, []);
 
     const handleSave = (event) => {
         if (backgroundRef.current) {
@@ -782,6 +790,7 @@ function Canvas(props) {
             type: 'POST_SAVE_INFO',
             payload: saveCoord
         })
+        console.log('This is the saveCoord payload', saveCoord)
     }
 
     return (
@@ -791,12 +800,13 @@ function Canvas(props) {
                 <button className='menuBtn' onClick={handleSave}> Save</button><br />
                 <button className='menuBtn'> Menu</button><br />
                 <button className='menuBtn'> Sound</button><br />
-            </div>
+            </div><div key={key}>
             <canvas ref={canvasRef}
                 width="1024"
                 height="576"
                 {...props}>
             </canvas>
+            </div>
             <div id="userInterface" style={{ display: 'none' }}>
                 <div className='nameCardEnemy'>
                     <h1 className='nameBar'>Draggle</h1>
