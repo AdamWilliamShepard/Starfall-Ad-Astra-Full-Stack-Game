@@ -11,9 +11,9 @@ function Nav() {
   return (
     <div className="nav">
       <Link to="/title">
-        <img src={StarfallLogo} alt="logo" style={{width: '40%', height: '100%', objectFit: 'cover'}} />
+        <img src={StarfallLogo} alt="logo" style={{width: '40%', height: '100%', objectFit: 'cover', marginLeft: 100}} />
       </Link>
-      <div>
+      <div style={{marginRight: 100}}>
         {/* If no user is logged in, show these links */}
         {!user.id && (
           // If there's no user, show login/registration links
