@@ -11,9 +11,9 @@ function Nav() {
   return (
     <div className="nav">
       <Link to="/title">
-        <img src={StarfallLogo} alt="logo" style={{width: '40%', height: '100%', objectFit: 'cover', marginLeft: 100}} />
+        <img src={StarfallLogo} alt="logo" style={{ width: '40%', height: '100%', objectFit: 'cover', marginLeft: 100 }} />
       </Link>
-      <div style={{marginRight: 100}}>
+      <div style={{ marginRight: 100 }}>
         {/* If no user is logged in, show these links */}
         {!user.id && (
           // If there's no user, show login/registration links
@@ -29,29 +29,17 @@ function Nav() {
               Home
             </Link>
 
-            {/* <Link className="navLink" to="/info">
-              Info Page
-            </Link> */}
+            <Link className="navLink" to="/canvas">
+              Play Game
+            </Link>
 
             <LogOutButton className="navLink" />
           </>
         )}
 
-        {/* <Link className="navLink" to="/title">
-          Title
-        </Link> */}
-
-        {/* <Link className="navLink" to="/about">
-          About
-        </Link> */}
-
-        <Link className="navLink" to="/canvas">
-          Play Game
-        </Link>
-
-        <Link className="navLink" to="/form">
+        {/* <Link className="navLink" to="/form">
           Form
-        </Link>
+        </Link> */}
 
       </div>
     </div>

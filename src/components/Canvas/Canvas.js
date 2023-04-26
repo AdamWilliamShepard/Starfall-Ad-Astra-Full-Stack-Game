@@ -10,20 +10,15 @@ const Canvas = (props) => {
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
-    const [key, Setkey] = useState(0)
-    // const [offset, setOffset] = useState({ x: -956, y: -475 })
-  
+    const [key, setKey] = useState(0)
     let offset = useSelector(store => store.savePositionReducer)
-    // console.log('this is databaseCoords', DatabaseCoords)
-    console.log('this is offset', offset)
-
     let [saveCoord, setSaveCoord] = useState({})
 
     useEffect(() => {
 
         const fetchData = async () => {
             dispatch({ type: 'GET_SAVE_INFO' })
-            await key +1
+            await setKey +1
         }
         fetchData()
 
@@ -489,6 +484,11 @@ const Canvas = (props) => {
 
                 if (moving)
                     moveables.forEach(movable => { movable.position.y += 3 })
+                    setSaveCoord({
+                        x: backgroundRef.current.position.x,
+                        y: backgroundRef.current.position.y
+                    })
+                    console.log('this is saveCoord', saveCoord)
             }
             else if (keys.a.pressed && lastkey === 'a') {
                 player.animate = true
@@ -512,6 +512,11 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.x += 3 })
+                    setSaveCoord({
+                        x: backgroundRef.current.position.x,
+                        y: backgroundRef.current.position.y
+                    })
+                    console.log('this is saveCoord', saveCoord)
             }
             else if (keys.s.pressed && lastkey === 's') {
                 player.animate = true
@@ -535,6 +540,11 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.y -= 3 })
+                    setSaveCoord({
+                        x: backgroundRef.current.position.x,
+                        y: backgroundRef.current.position.y
+                    })
+                    console.log('this is saveCoord', saveCoord)
             }
             else if (keys.d.pressed && lastkey === 'd') {
                 player.animate = true
@@ -558,6 +568,11 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.x -= 3 })
+                    setSaveCoord({
+                        x: backgroundRef.current.position.x,
+                        y: backgroundRef.current.position.y
+                    })
+                    console.log('this is saveCoord', saveCoord)
             }
         }
 
@@ -779,18 +794,11 @@ const Canvas = (props) => {
 
     }, []);
 
-    const handleSave = (event) => {
-        if (backgroundRef.current) {
-            setSaveCoord({
-                x: backgroundRef.current.position.x,
-                y: backgroundRef.current.position.y
+    const handleSave = async (event) => {
+            dispatch({
+                type: 'POST_SAVE_INFO',
+                payload: saveCoord
             })
-        }
-        dispatch({
-            type: 'POST_SAVE_INFO',
-            payload: saveCoord
-        })
-        console.log('This is the saveCoord payload', saveCoord)
     }
 
     return (

@@ -53,6 +53,7 @@ function DisplayHeroInfo() {
           <CardMedia
             sx={{ height: 150, width: 300, justifyContent: "center" }}
             image={specialAvatar}
+            component='img'
           />
           <CardContent sx={{ width: '100%', alignItems: "center" }}>
             <br /><br />

@@ -24,7 +24,6 @@ function ProfileDetail() {
   const [editState, setEditState] = useState(false)
 
   const reducerHeroToEdit = useSelector((store => store.editInfo))
-  console.log('this is reducerHeroToEdit', reducerHeroToEdit)
 
   useEffect(() => {
     dispatch({ type: "GET_HERO_STATS" }),
@@ -83,7 +82,7 @@ function ProfileDetail() {
             <Grid item xs={6}>
               {editState ? <Item>
                 {specialAvatar && <img src={specialAvatar} alt="Avatar" height='100' />}<br />
-                Name:<input
+                <span>Name:</span> <br /><input
                   onChange={(event) => handleChange(event)}
                   type='text'
                   size="30"
@@ -91,7 +90,7 @@ function ProfileDetail() {
                   placeholder={heroStats[0].Name}
                   value={reducerHeroToEdit.Name}
                 ></input><br />
-                Background: <input
+                <span>Background:</span> <input
                   onChange={(event) => handleBackgroundChange(event)}
                   type='text'
                   size="30"

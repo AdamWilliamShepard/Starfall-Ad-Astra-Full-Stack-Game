@@ -5,7 +5,7 @@ import { put, takeLatest } from 'redux-saga/effects';
 function* getSaveData(action) {
     try {
         const saveCoords = yield axios.get('/api/save')
-        console.log('These are the saveCoord from the server', saveCoords)
+        // console.log('These are the saveCoord from the server', saveCoords)
 
         yield put({ type: 'SET_SAVE_POSITION', payload: saveCoords.data })
     } catch (error) {
