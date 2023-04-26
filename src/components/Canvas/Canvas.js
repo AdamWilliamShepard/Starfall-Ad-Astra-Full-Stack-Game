@@ -10,15 +10,19 @@ const Canvas = (props) => {
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
+    const [sound, setSound] = useState(true)
     const [key, setKey] = useState(0)
     let offset = useSelector(store => store.savePositionReducer)
     let [saveCoord, setSaveCoord] = useState({})
 
     useEffect(() => {
 
+        if(sound){
+        audio.Map.play()}
+
         const fetchData = async () => {
             dispatch({ type: 'GET_SAVE_INFO' })
-            await setKey +1
+            await setKey + 1
         }
         fetchData()
 
@@ -484,11 +488,11 @@ const Canvas = (props) => {
 
                 if (moving)
                     moveables.forEach(movable => { movable.position.y += 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
+                console.log('this is saveCoord', saveCoord)
             }
             else if (keys.a.pressed && lastkey === 'a') {
                 player.animate = true
@@ -512,11 +516,11 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.x += 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
+                console.log('this is saveCoord', saveCoord)
             }
             else if (keys.s.pressed && lastkey === 's') {
                 player.animate = true
@@ -540,11 +544,11 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.y -= 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
+                console.log('this is saveCoord', saveCoord)
             }
             else if (keys.d.pressed && lastkey === 'd') {
                 player.animate = true
@@ -568,11 +572,11 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.x -= 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
+                console.log('this is saveCoord', saveCoord)
             }
         }
 
@@ -784,21 +788,25 @@ const Canvas = (props) => {
                     break
             }
         })
-        let clicked = false
-        addEventListener('click', () => {
-            if (!clicked) {
-                audio.Map.play()
-                clicked = true
-            }
-        })
 
     }, []);
 
+    const handleSound = () => {
+        if (!sound) {
+            audio.Map.play()
+            setSound(true)
+        }
+        else if (sound) {
+            audio.Map.stop()
+            setSound(false)
+        }
+    }
+
     const handleSave = async (event) => {
-            dispatch({
-                type: 'POST_SAVE_INFO',
-                payload: saveCoord
-            })
+        dispatch({
+            type: 'POST_SAVE_INFO',
+            payload: saveCoord
+        })
     }
 
     return (
@@ -807,13 +815,13 @@ const Canvas = (props) => {
             <div className='menu'>
                 <button className='menuBtn' onClick={handleSave}> Save</button><br />
                 <button className='menuBtn'> Menu</button><br />
-                <button className='menuBtn'> Sound</button><br />
+                <button className='menuBtn' onClick={handleSound}> Sound</button><br />
             </div><div key={key}>
-            <canvas ref={canvasRef}
-                width="1024"
-                height="576"
-                {...props}>
-            </canvas>
+                <canvas ref={canvasRef}
+                    width="1024"
+                    height="576"
+                    {...props}>
+                </canvas>
             </div>
             <div id="userInterface" style={{ display: 'none' }}>
                 <div className='nameCardEnemy'>
