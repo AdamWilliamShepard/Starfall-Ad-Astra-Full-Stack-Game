@@ -19,12 +19,16 @@ function StoryPage() {
 
   return (
     <div className="container">
-      <p>Our story begins with {heroStats.Name}.</p>
       <br />
-      <p>After a shooting star crashed down on earth, {heroStats.Name} <br /><br />
-       set out with their faithful friend and ally, Emby, to <br /><br />
-       
-       </p>
+      <p style={{lineHeight: 2}}>On a fateful night, long ago, <u>{heroStats.Name}</u> looked up at the night
+      sky, and saw the strangest sight- a flaming star falling from the heavens to the earth!   </p><br />
+       <p style={{lineHeight: 2}}>With a background as a <u>{heroStats.Background}</u>, <u>{heroStats.Name}</u> set
+       out with their faithful friend and ally, Emby, to investigate the crash. </p><br />
+       <p style={{lineHeight: 2}}>They met strange and dangerous foes along the way, but after days of travel 
+        they made it to their destination: Starfall Academy.</p> <br />
+        <p style={{lineHeight: 2}}>However, <u>{heroStats.Name}</u> and Emby found the Academy doors locked 
+        without a person in sight...</p><br />
+
     </div>
   );
 }
