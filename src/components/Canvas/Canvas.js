@@ -12,15 +12,13 @@ const Canvas = (props) => {
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
     let offset = useSelector(store => store.savePositionReducer)
+    const heroStats = useSelector(store => store.heroStatsReducer)
 
     const [sound, setSound] = useState(false)
     const [key, setKey] = useState(0)
     let [saveCoord, setSaveCoord] = useState({})
-    const [thing, setThing] = useState('player')
-
 
     useEffect(() => {
-
         // if (sound) {
         //     audio.Map.play()
         // }
@@ -314,7 +312,7 @@ const Canvas = (props) => {
         foregroundImage.src = require('../img/StarfallForeground.png')
 
         const playerDownImage = new Image()
-        playerDownImage.src = require(`../img/${thing}Down.png`)
+        playerDownImage.src = require(`../img/playerDown.png`)
 
         const playerUpImage = new Image()
         playerUpImage.src = require('../img/playerUp.png')

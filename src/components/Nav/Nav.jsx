@@ -29,6 +29,10 @@ function Nav() {
               Home
             </Link>
 
+            <Link className="navLink" to="/story">
+              Story
+            </Link>
+
             <Link className="navLink" to="/canvas">
               Play Game
             </Link>

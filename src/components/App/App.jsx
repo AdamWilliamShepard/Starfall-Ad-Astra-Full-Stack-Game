@@ -5,14 +5,10 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-
 import { useDispatch, useSelector } from 'react-redux';
-
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
-
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
@@ -23,6 +19,7 @@ import Canvas from '../Canvas/Canvas';
 import TitlePage from '../TitlePage/TitlePage';
 import ProfileForm from '../ProfileForm/ProfileForm';
 import ProfileDetail from '../ProfileDetail/ProfileDetail';
+import StoryPage from '../StoryPage/StoryPage';
 
 import './App.css';
 
@@ -119,9 +116,13 @@ function App() {
             <TitlePage />
           </Route>
 
-          <Route exact path="/canvas">
+          <ProtectedRoute exact path="/story">
+            <StoryPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/canvas">
             <Canvas />
-          </Route>
+          </ProtectedRoute>
 
           <Route exact path="/form">
             <ProfileForm />

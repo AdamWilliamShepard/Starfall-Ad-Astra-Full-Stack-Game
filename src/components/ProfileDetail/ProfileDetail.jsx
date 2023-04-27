@@ -30,7 +30,7 @@ function ProfileDetail() {
       dispatch({ type: 'GET_HERO_INVENTORY' }),
       dispatch({ type: 'GET_EQUIPMENT' })
   }, [])
-  const specialAvatar = heroStats && heroStats.length > 0 ? heroStats[0].Avatar : null;
+  const specialAvatar = heroStats ? heroStats.Avatar : null;
 
   function handleChange(event) {
     dispatch({
@@ -53,7 +53,7 @@ function ProfileDetail() {
   }
 
   function handleEditClick() {
-    dispatch({ type: 'SET_EDIT_INFO', payload: heroStats[0] })
+    dispatch({ type: 'SET_EDIT_INFO', payload: heroStats })
     setEditState(true)
   }
 
@@ -87,7 +87,7 @@ function ProfileDetail() {
                   type='text'
                   size="30"
                   name='Name'
-                  placeholder={heroStats[0].Name}
+                  placeholder={heroStats.Name}
                   value={reducerHeroToEdit.Name}
                 ></input><br />
                 <span>Background:</span> <input
@@ -95,7 +95,7 @@ function ProfileDetail() {
                   type='text'
                   size="30"
                   name='Background'
-                  placeholder={heroStats[0].Background}
+                  placeholder={heroStats.Background}
                   value={reducerHeroToEdit.Background}
                 ></input> <br />
                 <button onClick={handleSubmitChange}>Submit Changes</button>
@@ -104,8 +104,8 @@ function ProfileDetail() {
                 <Item>
                   <h3>Hero</h3>
                   {specialAvatar && <img src={specialAvatar} alt="Avatar" height='100' />}<br />
-                  <h5>Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-                  Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br /></h5>
+                  <h5>Name: {heroStats ? heroStats.Name : "Loading"} <br />
+                  Background:{heroStats ? heroStats.Background : "Loading"}<br /></h5>
                   <button onClick={handleEditClick}>Edit Your Hero</button>
                 </Item>
               }
