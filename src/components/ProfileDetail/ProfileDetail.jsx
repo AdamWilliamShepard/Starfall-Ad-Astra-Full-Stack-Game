@@ -82,7 +82,7 @@ function ProfileDetail() {
             <Grid item xs={6}>
               {editState ? <Item>
                 {specialAvatar && <img src={specialAvatar} alt="Avatar" height='100' />}<br />
-                <span>Name:</span> <br /><input
+                <span fontSize='10'>Name:</span> <br /><input
                   onChange={(event) => handleChange(event)}
                   type='text'
                   size="30"
@@ -90,7 +90,7 @@ function ProfileDetail() {
                   placeholder={heroStats.Name}
                   value={reducerHeroToEdit.Name}
                 ></input><br />
-                <span>Background:</span> <input
+                <span fontSize='10'>Background:</span><br /> <input
                   onChange={(event) => handleBackgroundChange(event)}
                   type='text'
                   size="30"

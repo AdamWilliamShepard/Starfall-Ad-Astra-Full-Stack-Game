@@ -14,14 +14,14 @@ const Canvas = (props) => {
     let offset = useSelector(store => store.savePositionReducer)
     const heroStats = useSelector(store => store.heroStatsReducer)
 
-    const [sound, setSound] = useState(false)
+    const [sound, setSound] = useState(true)
     const [key, setKey] = useState(0)
     let [saveCoord, setSaveCoord] = useState({})
 
     useEffect(() => {
-        // if (sound) {
-        //     audio.Map.play()
-        // }
+        if (sound) {
+            audio.Map.play()
+        }
 
         const fetchData = async () => {
             dispatch({ type: 'GET_SAVE_INFO' })
@@ -312,16 +312,16 @@ const Canvas = (props) => {
         foregroundImage.src = require('../img/StarfallForeground.png')
 
         const playerDownImage = new Image()
-        playerDownImage.src = require(`../img/playerDown.png`)
+        playerDownImage.src = require(`../img/primeplayerDown.png`)
 
         const playerUpImage = new Image()
-        playerUpImage.src = require('../img/playerUp.png')
+        playerUpImage.src = require('../img/primeplayerUp.png')
 
         const playerLeftImage = new Image()
-        playerLeftImage.src = require('../img/playerLeft.png')
+        playerLeftImage.src = require('../img/primeplayerLeft.png')
 
         const playerRightImage = new Image()
-        playerRightImage.src = require('../img/playerRight.png')
+        playerRightImage.src = require('../img/primeplayerRight.png')
 
         const player = new Sprite({
             position: {
@@ -813,13 +813,13 @@ const Canvas = (props) => {
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
-            <div className='menu'>
+            {/* <div className='menu'>
                 <button id='save' className='menuBtn' onClick={handleSave}> Save</button><br />
                 {sound ?
                     <button id='volume-up' className='menuBtn'><VolumeUp onClick={handleSound}></VolumeUp></button>
                     :
                     <button id='volume-down' className='menuBtn'><VolumeOff onClick={handleSound}></VolumeOff></button>}<br />
-            </div>
+            </div> */}
             <div key={key}>
                 <canvas ref={canvasRef}
                     width="1024"
