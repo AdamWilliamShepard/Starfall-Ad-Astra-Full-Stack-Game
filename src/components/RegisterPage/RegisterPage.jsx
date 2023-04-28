@@ -7,7 +7,7 @@ function RegisterPage() {
   const history = useHistory();
 
   return (
-    <div className="black-page" id="container1">
+    <div className="black-page" id="container1" >
       <RegisterForm />
 
       <center>

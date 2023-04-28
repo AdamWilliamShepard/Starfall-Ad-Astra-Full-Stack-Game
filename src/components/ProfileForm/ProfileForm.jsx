@@ -2,10 +2,13 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Box, TextField, Card, CardActions, CardContent, CardMedia, Button, Typography, InputLabel, MenuItem, FormHelperText, FormControl, Select } from '@mui/material';
+import { useHistory } from 'react-router-dom';
+
 
 export default function ProfileForm() {
 
   const dispatch = useDispatch()
+  const history = useHistory()
 
   let [infoToAdd, setInfoToAdd] = useState({ Name: '', Background: '', Avatar: '' })
 
@@ -52,6 +55,7 @@ export default function ProfileForm() {
         dispatch({ type: "FETCH_USER" })
       window.location.reload()
     }
+    history.push('/story')
   }
 
   return (
@@ -76,10 +80,12 @@ export default function ProfileForm() {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
+
                 <MenuItem value={'https://i.imgur.com/1bjWBOt.png'}>Young Hero</MenuItem>
+                <MenuItem value={'https://i.imgur.com/3cvm9IY.png'}>Prime Student</MenuItem>
                 <MenuItem value={'https://i.imgur.com/wy4RKGv.png'}>Gold Knight</MenuItem>
                 <MenuItem value={'https://i.imgur.com/FgSII4v.png'}>Dog Ninja</MenuItem>
-                <MenuItem value={'https://i.imgur.com/BJZbhCc.png'}>Green Ninja</MenuItem>
+
               </Select>
               <FormHelperText>Select an Avatar</FormHelperText>
             </FormControl>

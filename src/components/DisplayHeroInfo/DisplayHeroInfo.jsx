@@ -26,10 +26,10 @@ function DisplayHeroInfo() {
       dispatch({ type: 'GET_EQUIPMENT' })
   }, [])
 
-  const specialAvatar = heroStats && heroStats.length > 0 ? heroStats[0].Avatar : null;
+  const specialAvatar = heroStats ? heroStats.Avatar : null;
 
   const showDetails = () => {
-    history.push(`/details/${heroStats[0].id}`)
+    history.push(`/details/${heroStats.id}`)
   }
 
   return (
@@ -57,8 +57,8 @@ function DisplayHeroInfo() {
           />
           <CardContent sx={{ width: '100%', alignItems: "center" }}>
             <br /><br />
-            Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-            Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br />
+            Name: {heroStats ? heroStats.Name : "Loading"} <br />
+            Background:{heroStats ? heroStats.Background : "Loading"}<br />
 
           </CardContent>
           <CardActions sx={{ justifyContent: "center" }}>

@@ -30,7 +30,7 @@ function ProfileDetail() {
       dispatch({ type: 'GET_HERO_INVENTORY' }),
       dispatch({ type: 'GET_EQUIPMENT' })
   }, [])
-  const specialAvatar = heroStats && heroStats.length > 0 ? heroStats[0].Avatar : null;
+  const specialAvatar = heroStats ? heroStats.Avatar : null;
 
   function handleChange(event) {
     dispatch({
@@ -53,7 +53,7 @@ function ProfileDetail() {
   }
 
   function handleEditClick() {
-    dispatch({ type: 'SET_EDIT_INFO', payload: heroStats[0] })
+    dispatch({ type: 'SET_EDIT_INFO', payload: heroStats })
     setEditState(true)
   }
 
@@ -82,29 +82,30 @@ function ProfileDetail() {
             <Grid item xs={6}>
               {editState ? <Item>
                 {specialAvatar && <img src={specialAvatar} alt="Avatar" height='100' />}<br />
-                <span>Name:</span> <br /><input
+                <span fontSize='10'>Name:</span> <br /><input
                   onChange={(event) => handleChange(event)}
                   type='text'
                   size="30"
                   name='Name'
-                  placeholder={heroStats[0].Name}
+                  placeholder={heroStats.Name}
                   value={reducerHeroToEdit.Name}
                 ></input><br />
-                <span>Background:</span> <input
+                <span fontSize='10'>Background:</span><br /> <input
                   onChange={(event) => handleBackgroundChange(event)}
                   type='text'
                   size="30"
                   name='Background'
-                  placeholder={heroStats[0].Background}
+                  placeholder={heroStats.Background}
                   value={reducerHeroToEdit.Background}
                 ></input> <br />
                 <button onClick={handleSubmitChange}>Submit Changes</button>
               </Item>
                 :
                 <Item>
+                  <h3>Hero</h3>
                   {specialAvatar && <img src={specialAvatar} alt="Avatar" height='100' />}<br />
-                  <h5>Name: {heroStats && heroStats.length > 0 ? heroStats[0].Name : "Loading"} <br />
-                  Background:{heroStats && heroStats.length > 0 ? heroStats[0].Background : "Loading"}<br /></h5>
+                  <h5>Name: {heroStats ? heroStats.Name : "Loading"} <br />
+                  Background:{heroStats ? heroStats.Background : "Loading"}<br /></h5>
                   <button onClick={handleEditClick}>Edit Your Hero</button>
                 </Item>
               }
@@ -126,9 +127,9 @@ function ProfileDetail() {
                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                           <TableCell align="right"><img src={item.EquipIcon} height="50" /></TableCell>
-                          <TableCell align="right">{item.Slot}</TableCell>
-                          <TableCell align="right">{item.EquipName}</TableCell>
-                          <TableCell align="right">{item.EquipDescrip}</TableCell>
+                          {/* <TableCell align="right">{item.Slot}</TableCell> */}
+                          <TableCell sx={{fontSize: 10}} align="right"><span>{item.EquipName}</span></TableCell>
+                          <TableCell sx={{fontSize: 10}} align="right"><span>{item.EquipDescrip}</span></TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -138,8 +139,9 @@ function ProfileDetail() {
             </Grid>
             <Grid item xs={6}>
               <Item>
+                <h3> Ally</h3>
                 {specialAvatar && <img src='https://i.imgur.com/LLP2aTE.png' alt="Avatar" height='100' />}<br />
-                <h5>Ally Name: Emby <br />
+                <h5>Name: Emby <br />
                   Type: Fire
                 </h5> <br />
               </Item>
@@ -155,13 +157,14 @@ function ProfileDetail() {
                       {heroInventory.map((item) => (
                         <TableRow
                           key={item.id}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }
+                        }
                         >
                           <TableCell align="right"><img src={item.ItemIcon} height="50" /></TableCell>
-                          <TableCell align="right">{item.ItemQuantity}</TableCell>
-                          <TableCell align="right">{item.ItemName}</TableCell>
-                          <TableCell align="right">{item.ItemDescrip}</TableCell>
-                          <TableCell align="right"><button onClick={() => handleDelete(item.id)}>Delete</button></TableCell>
+                          {/* <TableCell align="right">{item.ItemQuantity}</TableCell> */}
+                          <TableCell sx={{fontSize: 10}} align="right"><span>{item.ItemName}</span></TableCell>
+                          <TableCell sx={{fontSize: 10}} align="right"><span className='cellFont'>{item.ItemDescrip}</span></TableCell>
+                          <TableCell sx={{fontSize: 10}} align="right"><button onClick={() => handleDelete(item.id)}>Delete</button></TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

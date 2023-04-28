@@ -1,24 +1,31 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { audio } from '../Helpers/Helpers';
-
+import { VolumeOff, VolumeUp } from '@mui/icons-material';
 
 const Canvas = (props) => {
     const canvasRef = useRef(null);
     const backgroundRef = useRef(null)
     const dispatch = useDispatch()
+
     const collision = useSelector(store => store.collisionReducer)
     const battleZoneData = useSelector(store => store.battleZonesReducer)
     const attacks = useSelector(store => store.attacksReducer)
-    const [key, setKey] = useState(0)
     let offset = useSelector(store => store.savePositionReducer)
+    const heroStats = useSelector(store => store.heroStatsReducer)
+
+    const [sound, setSound] = useState(true)
+    const [key, setKey] = useState(0)
     let [saveCoord, setSaveCoord] = useState({})
 
     useEffect(() => {
+        if (sound) {
+            audio.Map.play()
+        }
 
         const fetchData = async () => {
             dispatch({ type: 'GET_SAVE_INFO' })
-            await setKey +1
+            await setKey + 1
         }
         fetchData()
 
@@ -62,7 +69,6 @@ const Canvas = (props) => {
         class Sprite {
             constructor({
                 position,
-                velocity,
                 image,
                 frames = { max: 1, hold: 10 },
                 sprites = [],
@@ -122,7 +128,6 @@ const Canvas = (props) => {
         class Monster extends Sprite {
             constructor({
                 position,
-                velocity,
                 image,
                 frames = { max: 1, hold: 10 },
                 sprites = [],
@@ -134,7 +139,6 @@ const Canvas = (props) => {
             }) {
                 super({
                     position,
-                    velocity,
                     image,
                     frames,
                     sprites,
@@ -157,7 +161,9 @@ const Canvas = (props) => {
                     opacity: 0
                 })
                 audio.battle.stop()
-                audio.victory.play()
+                if (sound) {
+                    audio.victory.play()
+                }
             }
 
             attack({ attack, recipient, renderedSprites }) {
@@ -174,7 +180,7 @@ const Canvas = (props) => {
 
                 switch (attack.name) {
                     case 'Fireball':
-                        audio.initFireball.play()
+                        if (sound) { audio.initFireball.play() }
                         const fireballImage = new Image()
                         fireballImage.src = require('../img/fireball.png')
                         const fireball = new Sprite({
@@ -198,7 +204,7 @@ const Canvas = (props) => {
                             y: recipient.position.y,
                             onComplete: () => {
                                 //enemy actually gets hit
-                                audio.fireballHit.play()
+                                if (sound) { audio.fireballHit.play() }
                                 gsap.to(healthBar, {
                                     width: recipient.health + '%'
                                 })
@@ -235,7 +241,7 @@ const Canvas = (props) => {
                             duration: 0.1,
                             onComplete: () => {
                                 //enemy actually gets hit
-                                audio.tackleHit.play()
+                                if (sound) { audio.tackleHit.play() }
                                 gsap.to(healthBar, {
                                     width: recipient.health + '%'
                                 })
@@ -284,6 +290,7 @@ const Canvas = (props) => {
 
         const battleZones = []
 
+
         battleZonesMap.forEach((row, i) => {
             row.forEach((symbol, j) => {
                 if (symbol === 1025)
@@ -305,16 +312,16 @@ const Canvas = (props) => {
         foregroundImage.src = require('../img/StarfallForeground.png')
 
         const playerDownImage = new Image()
-        playerDownImage.src = require('../img/playerDown.png')
+        playerDownImage.src = require(`../img/primeplayerDown.png`)
 
         const playerUpImage = new Image()
-        playerUpImage.src = require('../img/playerUp.png')
+        playerUpImage.src = require('../img/primeplayerUp.png')
 
         const playerLeftImage = new Image()
-        playerLeftImage.src = require('../img/playerLeft.png')
+        playerLeftImage.src = require('../img/primeplayerLeft.png')
 
         const playerRightImage = new Image()
-        playerRightImage.src = require('../img/playerRight.png')
+        playerRightImage.src = require('../img/primeplayerRight.png')
 
         const player = new Sprite({
             position: {
@@ -431,8 +438,8 @@ const Canvas = (props) => {
                         window.cancelAnimationFrame(animationId)
 
                         audio.Map.stop()
-                        audio.initBattle.play()
-                        audio.battle.play()
+                        if (sound) { audio.initBattle.play() }
+                        if (sound) { audio.battle.play() }
 
                         battle.initiated = true
                         gsap.to('#overlappingDiv', {
@@ -484,11 +491,10 @@ const Canvas = (props) => {
 
                 if (moving)
                     moveables.forEach(movable => { movable.position.y += 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
             }
             else if (keys.a.pressed && lastkey === 'a') {
                 player.animate = true
@@ -512,11 +518,10 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.x += 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
             }
             else if (keys.s.pressed && lastkey === 's') {
                 player.animate = true
@@ -540,11 +545,10 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.y -= 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
             }
             else if (keys.d.pressed && lastkey === 'd') {
                 player.animate = true
@@ -568,11 +572,10 @@ const Canvas = (props) => {
                 }
                 if (moving)
                     moveables.forEach(movable => { movable.position.x -= 3 })
-                    setSaveCoord({
-                        x: backgroundRef.current.position.x,
-                        y: backgroundRef.current.position.y
-                    })
-                    console.log('this is saveCoord', saveCoord)
+                setSaveCoord({
+                    x: backgroundRef.current.position.x,
+                    y: backgroundRef.current.position.y
+                })
             }
         }
 
@@ -597,8 +600,8 @@ const Canvas = (props) => {
         //player battle combatant
         const embyImage = new Image()
         embyImage.src = require('../img/embySprite.png')
-
         let emby
+
         let renderedSprites
         let battleAnimationId
         //queue for enemy attacks
@@ -682,7 +685,7 @@ const Canvas = (props) => {
                                         opacity: 0
                                     })
                                     battle.initiated = false
-                                    audio.Map.play()
+                                    if (sound) { audio.Map.play() }
                                 }
                             })
                         })
@@ -712,7 +715,7 @@ const Canvas = (props) => {
                                             opacity: 0
                                         })
                                         battle.initiated = false
-                                        audio.Map.play()
+                                        if (sound) { audio.Map.play() }
                                     }
                                 })
                             })
@@ -784,36 +787,45 @@ const Canvas = (props) => {
                     break
             }
         })
-        let clicked = false
-        addEventListener('click', () => {
-            if (!clicked) {
-                audio.Map.play()
-                clicked = true
-            }
-        })
 
     }, []);
 
+    const handleSound = () => {
+        if (!sound) {
+            setSound(!sound)
+            audio.Map.play()
+        }
+        else if (sound) {
+            setSound(!sound)
+            audio.Map.pause()
+        }
+    }
+
     const handleSave = async (event) => {
+        if (dispatch) {
             dispatch({
                 type: 'POST_SAVE_INFO',
                 payload: saveCoord
             })
+        }
     }
 
     return (
         <div className='battleTransitionParent'>
             <div className='battleTransition' id='overlappingDiv'></div>
-            <div className='menu'>
-                <button className='menuBtn' onClick={handleSave}> Save</button><br />
-                <button className='menuBtn'> Menu</button><br />
-                <button className='menuBtn'> Sound</button><br />
-            </div><div key={key}>
-            <canvas ref={canvasRef}
-                width="1024"
-                height="576"
-                {...props}>
-            </canvas>
+            {/* <div className='menu'>
+                <button id='save' className='menuBtn' onClick={handleSave}> Save</button><br />
+                {sound ?
+                    <button id='volume-up' className='menuBtn'><VolumeUp onClick={handleSound}></VolumeUp></button>
+                    :
+                    <button id='volume-down' className='menuBtn'><VolumeOff onClick={handleSound}></VolumeOff></button>}<br />
+            </div> */}
+            <div key={key}>
+                <canvas ref={canvasRef}
+                    width="1024"
+                    height="576"
+                    {...props}>
+                </canvas>
             </div>
             <div id="userInterface" style={{ display: 'none' }}>
                 <div className='nameCardEnemy'>
