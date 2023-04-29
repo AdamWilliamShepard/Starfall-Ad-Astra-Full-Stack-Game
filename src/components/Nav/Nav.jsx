@@ -37,6 +37,10 @@ function Nav() {
               Play Game
             </Link>
 
+            <Link className="navLink" to="/about">
+              About
+            </Link>
+
             <LogOutButton className="navLink" />
           </>
         )}
