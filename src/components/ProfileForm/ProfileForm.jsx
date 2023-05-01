@@ -44,18 +44,18 @@ export default function ProfileForm() {
         type: 'POST_HERO_INFO',
         payload: infoToAdd
       }),
-       dispatch({
-        type: 'POST_HERO_STATS',
-        payload: infoToAdd
-      }),
+        dispatch({
+          type: 'POST_HERO_STATS',
+          payload: infoToAdd
+        }),
         dispatch({
           type: "CHANGE_PROFILE_CREATED",
           payload: user.id
         }),
         dispatch({ type: "FETCH_USER" })
-      // window.location.reload()
+
     }
-    history.push('/home')
+    window.location.reload()
   }
 
   return (
