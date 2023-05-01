@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import DisplayHeroInfo from '../DisplayHeroInfo/DisplayHeroInfo';
 import ProfileForm from '../ProfileForm/ProfileForm';
 
-
 function UserPage() {
 
   const dispatch = useDispatch()
