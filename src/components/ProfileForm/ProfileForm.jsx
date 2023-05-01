@@ -55,7 +55,7 @@ export default function ProfileForm() {
         dispatch({ type: "FETCH_USER" })
       window.location.reload()
     }
-    history.push('/user')
+    history.push('/home')
   }
 
   return (
