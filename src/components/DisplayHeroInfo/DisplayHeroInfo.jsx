@@ -22,8 +22,8 @@ function DisplayHeroInfo() {
 
   useEffect(() => {
     dispatch({ type: "GET_HERO_STATS" })
-      // dispatch({ type: 'GET_HERO_INVENTORY' }),
-      // dispatch({ type: 'GET_EQUIPMENT' })
+      dispatch({ type: 'GET_HERO_INVENTORY' }),
+      dispatch({ type: 'GET_EQUIPMENT' })
   }, [])
 
   const specialAvatar = heroStats ? heroStats.Avatar : null;

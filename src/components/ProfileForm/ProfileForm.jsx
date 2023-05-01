@@ -55,7 +55,6 @@ export default function ProfileForm() {
         dispatch({ type: "FETCH_USER" })
       window.location.reload()
     }
-    history.push('/story')
   }
 
   return (
