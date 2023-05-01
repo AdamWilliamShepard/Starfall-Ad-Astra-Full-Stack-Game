@@ -53,7 +53,7 @@ export default function ProfileForm() {
           payload: user.id
         }),
         dispatch({ type: "FETCH_USER" })
-      window.location.reload()
+      // window.location.reload()
     }
     history.push('/home')
   }
