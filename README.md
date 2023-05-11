@@ -13,7 +13,7 @@
 
 ## Description
 
-Starfall: Ad Astra is a Full Stack Web App in the style of a top-down Pokemon style game.
+Starfall: Ad Astra is a Full Stack Web App in the style of a top-down Pokemon style game built within a website utilizing a React framework.
 
 ## Screenshots
 <img width="1415" alt="Screenshot 2023-04-24 at 11 49 53 AM" src="https://user-images.githubusercontent.com/117591917/234157955-274ee8e4-4cbc-4250-9aa9-4765c64d8b5c.png">
